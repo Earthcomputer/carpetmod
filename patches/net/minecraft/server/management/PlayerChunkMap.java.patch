@@ -1,0 +1,27 @@
+--- ../src-base/minecraft/net/minecraft/server/management/PlayerChunkMap.java
++++ ../src-work/minecraft/net/minecraft/server/management/PlayerChunkMap.java
+@@ -21,6 +21,8 @@
+ import net.minecraft.world.WorldServer;
+ import net.minecraft.world.chunk.Chunk;
+ 
++import carpet.CarpetSettings;
++
+ public class PlayerChunkMap
+ {
+     private static final Predicate<EntityPlayerMP> field_187308_a = new Predicate<EntityPlayerMP>()
+@@ -167,6 +169,7 @@
+                 {
+                     boolean flag = playerchunkmapentry1.func_187269_a(field_187309_b);
+ 
++                    if (CarpetSettings.getBool("playersLoadChunks"))
+                     if (playerchunkmapentry1.func_187268_a(flag))
+                     {
+                         iterator.remove();
+@@ -458,6 +461,7 @@
+         this.field_187311_h.remove(p_187305_1_);
+         Chunk chunk = p_187305_1_.func_187266_f();
+ 
++        if (CarpetSettings.getBool("playersLoadChunks"))
+         if (chunk != null)
+         {
+             this.func_72688_a().func_72863_F().func_189549_a(chunk);

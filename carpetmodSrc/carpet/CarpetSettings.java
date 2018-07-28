@@ -250,7 +250,8 @@ public class CarpetSettings
                                 .extraInfo("Turning nether RNG manipulation on or off."),
   rule("endRNG",                "creative", "Turning end RNG manipulation on or off.")
                                 .extraInfo("Turning end RNG manipulation on or off."),
-
+  rule("playersLoadChunks",     "creative", "Enables/disables player chunk loading")
+                                .defaultTrue()
         };
         for (CarpetSettingEntry rule: RuleList)
         {

@@ -1,0 +1,45 @@
+--- ../src-base/minecraft/net/minecraft/server/management/PlayerChunkMapEntry.java
++++ ../src-work/minecraft/net/minecraft/server/management/PlayerChunkMapEntry.java
+@@ -19,6 +19,9 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import carpet.CarpetSettings;
++import carpet.helpers.ChunkHelper;
++
+ public class PlayerChunkMapEntry
+ {
+     private static final Logger field_187281_a = LogManager.getLogger();
+@@ -37,7 +40,10 @@
+     {
+         this.field_187282_b = p_i1518_1_;
+         this.field_187284_d = new ChunkPos(p_i1518_2_, p_i1518_3_);
+-        this.field_187286_f = p_i1518_1_.func_72688_a().func_72863_F().func_186028_c(p_i1518_2_, p_i1518_3_);
++        if (CarpetSettings.getBool("playersLoadChunks"))
++            this.field_187286_f = p_i1518_1_.func_72688_a().func_72863_F().func_186028_c(p_i1518_2_, p_i1518_3_);
++        else
++            this.field_187286_f = p_i1518_1_.func_72688_a().func_72863_F().func_186026_b(p_i1518_2_, p_i1518_3_);
+     }
+ 
+     public ChunkPos func_187264_a()
+@@ -231,10 +237,20 @@
+                         int k1 = (this.field_187285_e[l] >> 8 & 15) + this.field_187284_d.field_77275_b * 16;
+                         BlockPos blockpos1 = new BlockPos(i1, j1, k1);
+ 
++                        if (CarpetSettings.getBool("playersLoadChunks"))
++                        {
+                         if (this.field_187282_b.func_72688_a().func_180495_p(blockpos1).func_177230_c().func_149716_u())
+                         {
+                             this.func_187273_a(this.field_187282_b.func_72688_a().func_175625_s(blockpos1));
+                         }
++                        }
++                        else
++                        {
++                            if (ChunkHelper.getBlockStateNoDequeue(field_187282_b.func_72688_a(), blockpos1).func_177230_c().func_149716_u())
++                            {
++                                func_187273_a(ChunkHelper.getTileEntityNoDequeue(field_187282_b.func_72688_a(), blockpos1));
++                            }
++                        }
+                     }
+                 }
+ 
