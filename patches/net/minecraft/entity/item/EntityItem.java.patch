@@ -1,6 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/entity/item/EntityItem.java
 +++ ../src-work/minecraft/net/minecraft/entity/item/EntityItem.java
-@@ -35,6 +35,8 @@
+@@ -25,6 +25,8 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import carpet.logging.logHelpers.DamageReporter;
++
+ public class EntityItem extends Entity
+ {
+     private static final Logger field_145803_d = LogManager.getLogger();
+@@ -35,6 +37,8 @@
      private String field_145801_f;
      private String field_145802_g;
      public float field_70290_d;
@@ -9,7 +18,7 @@
  
      public EntityItem(World p_i1709_1_, double p_i1709_2_, double p_i1709_4_, double p_i1709_6_)
      {
-@@ -221,8 +223,23 @@
+@@ -221,8 +225,23 @@
                      }
                      else if (itemstack1.func_190916_E() + itemstack.func_190916_E() > itemstack1.func_77976_d())
                      {
@@ -33,7 +42,15 @@
                      else
                      {
                          itemstack1.func_190917_f(itemstack.func_190916_E());
-@@ -470,4 +487,9 @@
+@@ -295,6 +314,7 @@
+ 
+             if (this.field_70291_e <= 0)
+             {
++                DamageReporter.register_final_damage_items_killed(this, p_70097_1_, p_70097_2_); // CM
+                 this.func_70106_y();
+             }
+ 
+@@ -470,4 +490,9 @@
          this.func_174871_r();
          this.field_70292_b = 5999;
      }

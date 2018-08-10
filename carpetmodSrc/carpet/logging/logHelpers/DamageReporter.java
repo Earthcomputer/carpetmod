@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 
 public class DamageReporter
 {
+    public static int itemsKilledCount = 0;
+    
     private static ITextComponent[] verifyAndProduceMessage(String option, EntityPlayer player, Entity from, Entity to, Supplier<ITextComponent> messageFuture)
     {
         if ("all".equalsIgnoreCase(option)
@@ -63,6 +65,20 @@ public class DamageReporter
                 Messenger.m(null,
                         "g  - total received ",
                         String.format("r %.2f", amount),
+                        "g  points of damage")
+            )
+        );
+    }
+    
+    public static void register_final_damage_items_killed(Entity target, DamageSource source, float amount)
+    {
+        if (!LoggerRegistry.__damage) return;
+        itemsKilledCount++;
+        LoggerRegistry.getLogger("damage").log( (option, player)->
+            verifyAndProduceMessage(option, player, source.getTrueSource(), target, () ->
+                Messenger.m(null,
+                        "g  - total received ",
+                        String.format("r %.2f %d", amount, itemsKilledCount),
                         "g  points of damage")
             )
         );
