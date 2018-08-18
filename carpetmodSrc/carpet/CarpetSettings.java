@@ -89,6 +89,7 @@ public class CarpetSettings
     public static boolean doubleRetraction = false;
     public static boolean netherRNG = false;
     public static boolean endRNG = false;
+    public static int structureBlockLimit = 32;
 
     public static long setSeed = 0;
 
@@ -210,6 +211,7 @@ public class CarpetSettings
   rule("commandPerimeterInfo",  "commands", "Enables /perimeterinfo command that scans the area around the block for potential spawnable spots").defaultTrue(),
   rule("commandPlayer",         "commands", "Enables /player command to control/spawn players").defaultTrue(),
   rule("commandRNG",            "commands", "Enables /rng command to manipulate and query rng").defaultTrue(),
+  rule("commandStructure",      "commands", "Enables /structure to manage NBT structures used by structure blocks").defaultTrue(),
   rule("newLight",              "optimizations", "Uses alternative lighting engine by PhiPros. AKA NewLight mod"),
   rule("carpets",               "survival", "Placing carpets may issue carpet commands for non-op players"),
   rule("missingTools",          "survival", "Pistons, Glass and Sponge can be broken faster with their appropriate tools"),
@@ -264,6 +266,8 @@ public class CarpetSettings
                                 .extraInfo("As set by the /tickingarea comamnd.",
                                 "Ticking areas work as if they are the spawn chunks."),
   rule("disableSpawnChunks",    "creative", "Removes the spawn chunks."),
+  rule("structureBlockLimit",   "creative", "Changes the structure block dimension limit.")
+                                .choices("32", "32 50 200 1000").setNotStrict(),
 
         };
         for (CarpetSettingEntry rule: RuleList)
@@ -305,6 +309,7 @@ public class CarpetSettings
         doubleRetraction = CarpetSettings.getBool("doubleRetraction");
         netherRNG = CarpetSettings.getBool("netherRNG");
         endRNG = CarpetSettings.getBool("endRNG");
+        structureBlockLimit = CarpetSettings.getInt("structureBlockLimit");
 
         if ("pistonGhostBlocksFix".equalsIgnoreCase(rule))
         {
