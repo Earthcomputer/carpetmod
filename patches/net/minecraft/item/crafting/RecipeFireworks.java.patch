@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/item/crafting/RecipeFireworks.java
 +++ ../src-work/minecraft/net/minecraft/item/crafting/RecipeFireworks.java
-@@ -257,6 +257,7 @@
+@@ -257,6 +257,17 @@
  
      public boolean func_192399_d()
      {
@@ -8,4 +8,14 @@
 +        //return true;
 +        return false; // CM: firework recipes
      }
++    
++    // CM: needed for recipe unlocking
++    @Override
++    public NonNullList<Ingredient> func_192400_c()
++    {
++        NonNullList<Ingredient> ingredients = NonNullList.func_191196_a();
++        ingredients.add(Ingredient.func_193367_a(Items.field_151121_aF));
++        ingredients.add(Ingredient.func_193367_a(Items.field_151016_H));
++        return ingredients;
++    }
  }
