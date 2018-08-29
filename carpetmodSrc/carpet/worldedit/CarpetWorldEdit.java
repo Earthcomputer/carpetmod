@@ -9,22 +9,36 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Joiner;
+import com.sk89q.jnbt.CompoundTag;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BaseItemStack;
+import com.sk89q.worldedit.entity.BaseEntity;
 import com.sk89q.worldedit.event.platform.PlatformReadyEvent;
 import com.sk89q.worldedit.extension.platform.Platform;
+import com.sk89q.worldedit.history.change.BlockChange;
+import com.sk89q.worldedit.history.change.EntityCreate;
+import com.sk89q.worldedit.history.change.EntityRemove;
 import com.sk89q.worldedit.internal.LocalWorldAdapter;
 
 import carpet.CarpetSettings;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -44,6 +58,9 @@ class CarpetWorldEdit {
     private CarpetConfiguration config;
     
     private boolean firstTick = true;
+    
+    private EditSession editSession = null;
+    private int sessionNestedDepth = 0;
 
     public void onServerLoaded(MinecraftServer server) {
         logger = LogManager.getLogger("WorldEdit");
@@ -129,6 +146,98 @@ class CarpetWorldEdit {
             return false;
         
         return true;
+    }
+    
+    public void startEditSession(EntityPlayerMP player) {
+        if (player == null)
+            return;
+
+        sessionNestedDepth++;
+        if (editSession == null) {
+            CarpetPlayer carpetPlayer = wrap(player);
+            editSession = WorldEdit.getInstance().getSessionManager().get(carpetPlayer).createEditSession(carpetPlayer);
+        }
+    }
+    
+    public void finishEditSession(EntityPlayerMP player) {
+        if (player == null)
+            return;
+        
+        if (editSession == null) {
+            throw new IllegalStateException("Not started!");
+        }
+        
+        sessionNestedDepth--;
+        
+        if (sessionNestedDepth == 0) {
+            CarpetPlayer carpetPlayer = wrap(player);
+            if (editSession.getChangeSet().size() > 0)
+                WorldEdit.getInstance().getSessionManager().get(carpetPlayer).remember(editSession);
+            editSession = null;
+        }
+    }
+    
+    public void recordBlockEdit(EntityPlayerMP player, World world, BlockPos pos, IBlockState newBlock, NBTTagCompound newTileEntity) {
+        if (player == null)
+            return;
+        
+        if (editSession == null) {
+            throw new IllegalStateException("Not started!");
+        }
+        
+        BlockVector position = new BlockVector(pos.getX(), pos.getY(), pos.getZ());
+        
+        IBlockState oldBlock = world.getBlockState(pos);
+        int oldBlockId = Block.getIdFromBlock(oldBlock.getBlock());
+        int oldMeta = oldBlock.getBlock().getMetaFromState(oldBlock);
+        TileEntity oldTileEntity = world.getTileEntity(pos);
+        BaseBlock previous;
+        if (oldTileEntity == null)
+            previous = new BaseBlock(oldBlockId, oldMeta);
+        else
+            previous = new BaseBlock(oldBlockId, oldMeta, NBTConverter.fromNative(oldTileEntity.writeToNBT(new NBTTagCompound())));
+        
+        int newBlockId = Block.getIdFromBlock(newBlock.getBlock());
+        int newMeta = newBlock.getBlock().getMetaFromState(newBlock);
+        BaseBlock current;
+        if (newTileEntity == null)
+            current = new BaseBlock(newBlockId, newMeta);
+        else
+            current = new BaseBlock(newBlockId, newMeta, NBTConverter.fromNative(newTileEntity));
+        
+        editSession.getChangeSet().add(new BlockChange(position, previous, current));
+    }
+    
+    public void recordEntityCreation(EntityPlayerMP player, World world, Entity created) {
+        if (player == null)
+            return;
+        
+        if (editSession == null) {
+            throw new IllegalStateException("Not started!");
+        }
+        
+        CarpetEntity carpetEntity = new CarpetEntity(created);
+        String entityId = EntityList.getKey(created).toString();
+        CompoundTag tag = NBTConverter.fromNative(created.writeToNBT(new NBTTagCompound()));
+        BaseEntity baseEntity = new BaseEntity(entityId, tag);
+        
+        editSession.getChangeSet().add(new EntityCreate(carpetEntity.getLocation(), baseEntity, carpetEntity));
+    }
+    
+    public void recordEntityRemoval(EntityPlayerMP player, World world, Entity removed) {
+        if (player == null)
+            return;
+        
+        if (editSession == null) {
+            throw new IllegalStateException("Not started!");
+        }
+        
+        CarpetEntity carpetEntity = new CarpetEntity(removed);
+        String entityId = EntityList.getKey(removed).toString();
+        CompoundTag tag = NBTConverter.fromNative(removed.writeToNBT(new NBTTagCompound()));
+        BaseEntity baseEntity = new BaseEntity(entityId, tag);
+        
+        editSession.getChangeSet().add(new EntityRemove(carpetEntity.getLocation(), baseEntity));
     }
 
     public static ItemStack toCarpetItemStack(BaseItemStack item) {
