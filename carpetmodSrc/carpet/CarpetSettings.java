@@ -272,6 +272,9 @@ public class CarpetSettings
                                 .choices("32", "32 50 200 1000").setNotStrict(),
   rule("worldEdit",             "creative", "Enables/disables WorldEdit.")
                                 .extraInfo("Only works in WorldEdit is in the classpath."),
+  rule("pistonSerializationFix","fix", "Fixes bug with piston serialization"),
+  rule("reloadUpdateOrderFix",  "fix", "Fixes reload update order for tile entities")
+                                .extraInfo("Fixes instant wires randomly breaking"),
 
         };
         for (CarpetSettingEntry rule: RuleList)
@@ -719,6 +722,8 @@ public class CarpetSettings
         set("unloadedEntityFix","true");
         set("hopperDuplicationFix","true");
         set("calmNetherFires","true");
+        set("pistonSerializationFix","true");
+        set("reloadUpdateOrderFix","true");
     }
 
     public static class CarpetSettingEntry 
