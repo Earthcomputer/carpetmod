@@ -29,6 +29,7 @@ public class LoggerRegistry
     public static boolean __packets;
     public static boolean __weather;
     public static boolean __endGateway;
+    public static boolean __datalessTEUpdated;
 
     public static void initLoggers(MinecraftServer server)
     {
@@ -39,6 +40,7 @@ public class LoggerRegistry
         registerLogger("damage", new Logger(server, "damage", "all", new String[]{"all","players","me"}, LogHandler.CHAT));
         registerLogger("weather", new Logger(server, "weather", null, null, LogHandler.CHAT));
         registerLogger("endGateway", new Logger(server, "endGateway", "generating", new String[]{"generating","all"}, LogHandler.CHAT));
+        registerLogger("datalessTEUpdated", new Logger(server, "datalessTEUpdated", null, null, LogHandler.CHAT));
 
         registerLogger("tps", new Logger(server, "tps", null, null, LogHandler.HUD));
         registerLogger("packets", new Logger(server, "packets", null, null, LogHandler.HUD));

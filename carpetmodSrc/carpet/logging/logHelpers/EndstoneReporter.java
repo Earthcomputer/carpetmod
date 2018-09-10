@@ -3,6 +3,7 @@ package carpet.logging.logHelpers;
 import carpet.logging.LoggerRegistry;
 import carpet.utils.Messenger;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityEndGateway;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -33,6 +34,24 @@ public class EndstoneReporter
             "TARGET_Y", targetPos.getY(),
             "TARGET_Z", targetPos.getZ(),
             "GENERATED", generated);
+        }
+    }
+    
+    public static void onDatalessTEQueried(TileEntity te)
+    {
+        if (LoggerRegistry.__datalessTEUpdated)
+        {
+            LoggerRegistry.getLogger("datalessTEUpdated").log(() -> {
+               return new ITextComponent[] {
+                       Messenger.m(null,
+                               "g  dataless TE updated ",
+                               "g  tick ", "w " + te.getWorld().getTotalWorldTime(),
+                               "g  pos ", String.format("w (%d, %d, %d)", te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()))
+               };
+            },
+            "X", te.getPos().getX(),
+            "Y", te.getPos().getY(),
+            "Z", te.getPos().getZ());
         }
     }
     
