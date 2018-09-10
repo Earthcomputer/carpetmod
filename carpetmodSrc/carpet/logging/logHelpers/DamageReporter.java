@@ -75,7 +75,6 @@ public class DamageReporter
     public static void register_final_damage_items_killed(Entity target, DamageSource source, float amount)
     {
         if (!LoggerRegistry.__damage) return;
-        itemsKilledCount++;
         LoggerRegistry.getLogger("damage").log( (option, player)->
             verifyAndProduceMessage(option, player, source.getTrueSource(), target, () ->
                 Messenger.m(null,
