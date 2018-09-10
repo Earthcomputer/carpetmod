@@ -13,8 +13,6 @@ import java.util.function.Supplier;
 
 public class DamageReporter
 {
-    public static int itemsKilledCount = 0;
-    
     private static ITextComponent[] verifyAndProduceMessage(String option, EntityPlayer player, Entity from, Entity to, Supplier<ITextComponent> messageFuture)
     {
         if ("all".equalsIgnoreCase(option)
@@ -82,9 +80,13 @@ public class DamageReporter
             verifyAndProduceMessage(option, player, source.getTrueSource(), target, () ->
                 Messenger.m(null,
                         "g  - total received ",
-                        String.format("r %.2f %d", amount, itemsKilledCount),
+                        String.format("r %.2f", amount),
                         "g  points of damage")
-            )
+            ),
+            "ATTACKER", source.getTrueSource() == null ? null : source.getTrueSource().getCachedUniqueIdString(),
+            "TARGET", target.getCachedUniqueIdString(),
+            "AMOUNT", amount,
+            "DAMAGE_TYPE", source.getDamageType()
         );
     }
 
