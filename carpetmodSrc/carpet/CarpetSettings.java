@@ -90,6 +90,7 @@ public class CarpetSettings
     public static boolean netherRNG = false;
     public static boolean endRNG = false;
     public static int structureBlockLimit = 32;
+    public static boolean disablePlayerCollision = false;
 
     public static long setSeed = 0;
 
@@ -277,6 +278,7 @@ public class CarpetSettings
   rule("reloadUpdateOrderFix",  "fix", "Fixes reload update order for tile entities")
                                 .extraInfo("Fixes instant wires randomly breaking.",
                                            "Effective after chunk reload."),
+  rule("disablePlayerCollision","creative", "Disables player entity collision."),
 
         };
         for (CarpetSettingEntry rule: RuleList)
@@ -319,6 +321,7 @@ public class CarpetSettings
         netherRNG = CarpetSettings.getBool("netherRNG");
         endRNG = CarpetSettings.getBool("endRNG");
         structureBlockLimit = CarpetSettings.getInt("structureBlockLimit");
+        disablePlayerCollision = CarpetSettings.getBool("disablePlayerCollision");
 
         if ("pistonGhostBlocksFix".equalsIgnoreCase(rule))
         {
