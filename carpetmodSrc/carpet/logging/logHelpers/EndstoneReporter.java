@@ -21,7 +21,8 @@ public class EndstoneReporter
                         Messenger.m(null,
                                 "g  tick ", "w " + gateway.getWorld().getTotalWorldTime(),
                                 "g  gateway at ", String.format("w (%d, %d, %d)", gateway.getPos().getX(), gateway.getPos().getY(), gateway.getPos().getZ()),
-                                "g  teleports to ", String.format("w (%d, %d, %d)", targetPos.getX(), targetPos.getY(), targetPos.getZ()))
+                                "g  teleports to ", String.format("w (%d, %d, %d)", targetPos.getX(), targetPos.getY(), targetPos.getZ()),
+                                "g  item pos ", String.format("w (%f, %f, %f)", entity.posX, entity.posY, entity.posZ))
                 };
             },
             "GATEWAY_X", gateway.getPos().getX(),
