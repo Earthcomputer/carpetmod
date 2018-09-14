@@ -279,6 +279,8 @@ public class CarpetSettings
                                 .extraInfo("Fixes instant wires randomly breaking.",
                                            "Effective after chunk reload."),
   rule("disablePlayerCollision","creative", "Disables player entity collision."),
+  rule("leashFix",              "fix",      "Fixes to leashes.")
+                                .choices("false", "false casual cool"),
 
         };
         for (CarpetSettingEntry rule: RuleList)
@@ -729,6 +731,7 @@ public class CarpetSettings
         set("calmNetherFires","true");
         set("pistonSerializationFix","true");
         set("reloadUpdateOrderFix","true");
+        set("leashFix","true");
     }
 
     public static class CarpetSettingEntry 
