@@ -281,6 +281,8 @@ public class CarpetSettings
   rule("disablePlayerCollision","creative", "Disables player entity collision."),
   rule("leashFix",              "fix",      "Fixes to leashes.")
                                 .choices("false", "false casual cool"),
+  rule("commandAstral",     "commands", "Enables players to log out leaving there characters behind.")
+                                .extraInfo("WARNING! Don't set to low click speed unless necessary."),
 
         };
         for (CarpetSettingEntry rule: RuleList)
