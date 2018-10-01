@@ -43,7 +43,7 @@ import net.minecraft.util.math.ChunkPos;
 public class CarpetSettings
 {
     public static boolean locked = false;
-    public static final String carpetVersion = "v18_09_14_earth";
+    public static final String carpetVersion = "v18_10_01";
 
     public static final Logger LOG = LogManager.getLogger();
     private static final Map<String, CarpetSettingEntry> settings_store;
