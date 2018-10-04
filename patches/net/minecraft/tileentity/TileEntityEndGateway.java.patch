@@ -1,0 +1,29 @@
+--- ../src-base/minecraft/net/minecraft/tileentity/TileEntityEndGateway.java
++++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityEndGateway.java
+@@ -22,6 +22,8 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
++import carpet.logging.logHelpers.EndstoneReporter;
++
+ public class TileEntityEndGateway extends TileEntityEndPortal implements ITickable
+ {
+     private static final Logger field_184314_a = LogManager.getLogger();
+@@ -142,14 +144,17 @@
+         {
+             this.field_184316_g = 100;
+ 
++            boolean generated = false;
+             if (this.field_184317_h == null && this.field_145850_b.field_73011_w instanceof WorldProviderEnd)
+             {
++                generated = true;
+                 this.func_184311_k();
+             }
+ 
+             if (this.field_184317_h != null)
+             {
+                 BlockPos blockpos = this.field_184318_i ? this.field_184317_h : this.func_184303_j();
++                EndstoneReporter.onGatewayTeleport(this, p_184306_1_, blockpos, generated);
+                 p_184306_1_.func_70634_a((double)blockpos.func_177958_n() + 0.5D, (double)blockpos.func_177956_o() + 0.5D, (double)blockpos.func_177952_p() + 0.5D);
+             }
+ 
