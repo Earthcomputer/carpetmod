@@ -186,3 +186,48 @@
              }
  
              p_175654_3_ = 1;
+@@ -523,6 +599,7 @@
+                 nextticklistentry.func_82753_a(p_175654_4_);
+             }
+ 
++            carpet.Debug.ensureMainThread();
+             if (!this.field_73064_N.contains(nextticklistentry))
+             {
+                 this.field_73064_N.add(nextticklistentry);
+@@ -542,6 +619,7 @@
+             nextticklistentry.func_77176_a((long)p_180497_3_ + this.field_72986_A.func_82573_f());
+         }
+ 
++        carpet.Debug.ensureMainThread();
+         if (!this.field_73064_N.contains(nextticklistentry))
+         {
+             this.field_73064_N.add(nextticklistentry);
+@@ -632,6 +710,7 @@
+ 
+     public boolean func_72955_a(boolean p_72955_1_)
+     {
++        carpet.Debug.ensureMainThread();
+         if (this.field_72986_A.func_76067_t() == WorldType.field_180272_g)
+         {
+             return false;
+@@ -640,9 +719,10 @@
+         {
+             int i = this.field_73065_O.size();
+ 
+-            if (i != this.field_73064_N.size())
++            int hashsetsize;
++            if (i != (hashsetsize = this.field_73064_N.size()))
+             {
+-                throw new IllegalStateException("TickNextTick list out of synch");
++                throw new IllegalStateException("TickNextTick list out of synch, hashset size: " + hashsetsize + ", treeset size: " + i);
+             }
+             else
+             {
+@@ -723,6 +803,7 @@
+     @Nullable
+     public List<NextTickListEntry> func_175712_a(StructureBoundingBox p_175712_1_, boolean p_175712_2_)
+     {
++        carpet.Debug.ensureMainThread();
+         List<NextTickListEntry> list = null;
+ 
+         for (int i = 0; i < 2; ++i)
