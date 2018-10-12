@@ -283,6 +283,9 @@ public class CarpetSettings
                                 .choices("false", "false casual cool"),
   rule("commandAstral",     "commands", "Enables players to log out leaving there characters behind.")
                                 .extraInfo("WARNING! Don't set to low click speed unless necessary."),
+  rule("leashFix",              "fix",      "Fixes to leashes.")
+                                .choices("false", "false casual cool"),
+  rule("disablePlayerCollision","creative", "Disables player entity collision."),
 
         };
         for (CarpetSettingEntry rule: RuleList)
