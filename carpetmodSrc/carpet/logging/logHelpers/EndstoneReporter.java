@@ -1,5 +1,6 @@
 package carpet.logging.logHelpers;
 
+import carpet.CarpetServer;
 import carpet.logging.LoggerRegistry;
 import carpet.utils.Messenger;
 import net.minecraft.entity.Entity;
@@ -45,7 +46,7 @@ public class EndstoneReporter
                return new ITextComponent[] {
                        Messenger.m(null,
                                "g  dataless TE updated ",
-                               "g  tick ", "w " + te.getWorld().getTotalWorldTime(),
+                               "g  tick ", "w " + CarpetServer.minecraft_server.worlds[0].getTotalWorldTime(),
                                "g  pos ", String.format("w (%d, %d, %d)", te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()))
                };
             },
