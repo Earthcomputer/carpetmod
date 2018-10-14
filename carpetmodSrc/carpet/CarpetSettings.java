@@ -281,14 +281,6 @@ public class CarpetSettings
   rule("reloadUpdateOrderFix",  "fix", "Fixes reload update order for tile entities")
                                 .extraInfo("Fixes instant wires randomly breaking.",
                                            "Effective after chunk reload."),
-=========
-  rule("worldEdit",             "creative", "Enables/disables WorldEdit.")
-                                .extraInfo("Only works in WorldEdit is in the classpath."),
->>>>>>>>> Temporary merge branch 2
-=========
-  rule("disablePlayerCollision","creative", "Disables player entity collision."),
->>>>>>>>> Temporary merge branch 2
-=========
   rule("leashFix",              "fix",      "Fixes to leashes.")
                                 .choices("false", "false casual cool"),
   rule("disablePlayerCollision","creative", "Disables player entity collision."),
