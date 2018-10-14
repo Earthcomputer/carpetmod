@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
+import carpet.carpetclient.CarpetClientChunkLogger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +44,7 @@ import net.minecraft.util.math.ChunkPos;
 public class CarpetSettings
 {
     public static boolean locked = false;
-    public static final String carpetVersion = "v18_10_01";
+    public static final String carpetVersion = "v18_08_05";
 
     public static final Logger LOG = LogManager.getLogger();
     private static final Map<String, CarpetSettingEntry> settings_store;
@@ -90,6 +91,7 @@ public class CarpetSettings
     public static boolean netherRNG = false;
     public static boolean endRNG = false;
     public static int structureBlockLimit = 32;
+    public static boolean chunkDebugTool = false;
     public static boolean disablePlayerCollision = false;
 
     public static long setSeed = 0;
@@ -272,15 +274,24 @@ public class CarpetSettings
   rule("disableSpawnChunks",    "creative", "Removes the spawn chunks."),
   rule("structureBlockLimit",   "creative", "Changes the structure block dimension limit.")
                                 .choices("32", "32 50 200 1000").setNotStrict(),
+  rule("chunkDebugTool", "creative", "Enables chunk debug on carpet client."),
   rule("worldEdit",             "creative", "Enables/disables WorldEdit.")
                                 .extraInfo("Only works in WorldEdit is in the classpath."),
   rule("pistonSerializationFix","fix", "Fixes bug with piston serialization"),
   rule("reloadUpdateOrderFix",  "fix", "Fixes reload update order for tile entities")
                                 .extraInfo("Fixes instant wires randomly breaking.",
                                            "Effective after chunk reload."),
+=========
+  rule("worldEdit",             "creative", "Enables/disables WorldEdit.")
+                                .extraInfo("Only works in WorldEdit is in the classpath."),
+>>>>>>>>> Temporary merge branch 2
+=========
   rule("disablePlayerCollision","creative", "Disables player entity collision."),
+>>>>>>>>> Temporary merge branch 2
+=========
   rule("leashFix",              "fix",      "Fixes to leashes.")
                                 .choices("false", "false casual cool"),
+  rule("disablePlayerCollision","creative", "Disables player entity collision."),
   rule("commandAstral",     "commands", "Enables players to log out leaving there characters behind.")
                                 .extraInfo("WARNING! Don't set to low click speed unless necessary."),
 
@@ -325,6 +336,8 @@ public class CarpetSettings
         netherRNG = CarpetSettings.getBool("netherRNG");
         endRNG = CarpetSettings.getBool("endRNG");
         structureBlockLimit = CarpetSettings.getInt("structureBlockLimit");
+        chunkDebugTool = CarpetSettings.getBool("chunkDebugTool");
+        mergeTNT = CarpetSettings.getBool("mergeTNT");
         disablePlayerCollision = CarpetSettings.getBool("disablePlayerCollision");
 
         if ("pistonGhostBlocksFix".equalsIgnoreCase(rule))
@@ -452,6 +465,8 @@ public class CarpetSettings
                     overworld.getChunkProvider().provideChunk(chunk.x, chunk.z);
                 }
             }
+        } else if (!chunkDebugTool) {
+            CarpetClientChunkLogger.logger.disable();
         }
     }
     public static void apply_settings_from_conf(MinecraftServer server)

@@ -23,7 +23,8 @@ public class CarpetClientMessageHandler {
 	public static final int LARGE_VILLAGE_MARKERS = 6;
 	public static final int LARGE_BOUNDINGBOX_MARKERS_START = 7;
 	public static final int LARGE_BOUNDINGBOX_MARKERS = 8;
-
+	public static final int CHUNK_LOGGER = 9;
+	
 	public static void handler(EntityPlayerMP sender, PacketBuffer data) {
 		int type = data.readInt();
 
@@ -35,6 +36,8 @@ public class CarpetClientMessageHandler {
 			registerVillagerMarkers(sender, data);
 		} else if (BOUNDINGBOX_MARKERS == type) {
 			boundingboxRequest(sender, data);
+		} else if (CHUNK_LOGGER == type) {
+			CarpetClientChunkLogger.logger.registerPlayer(sender, data);
 		}
 	}
 
@@ -85,7 +88,7 @@ public class CarpetClientMessageHandler {
 
 		data.writeCompoundTag(compound);
 
-		if (!CarpetClientServer.sender(data, sender)) {
+		if (!CarpetClientServer.sendProtected(data, sender)) {
 		    // Payload was too large, try large packets for newer CC versions
 		    NBTTagList villages = compound.getTagList("Villages", 10);
 		    
@@ -112,7 +115,7 @@ public class CarpetClientMessageHandler {
 
 		data.writeCompoundTag(compound);
 
-		if (!CarpetClientServer.sender(data, sender)) {
+		if (!CarpetClientServer.sendProtected(data, sender)) {
 		    // Payload was too large, try large packets for newer CC versions
 		    NBTTagList boxes = compound.getTagList("Boxes", 9);
 		    compound.removeTag("Boxes");
@@ -148,4 +151,13 @@ public class CarpetClientMessageHandler {
 
 		CarpetClientServer.sender(data);
 	}
+	
+    public static void sendNBTChunkData(EntityPlayerMP sender, int dataType, NBTTagCompound compound) {
+        PacketBuffer data = new PacketBuffer(Unpooled.buffer());
+        data.writeInt(CarpetClientMessageHandler.CHUNK_LOGGER);
+        data.writeInt(dataType);
+        data.writeCompoundTag(compound);
+
+        CarpetClientServer.sender(data);
+    }
 }
