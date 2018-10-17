@@ -96,7 +96,7 @@ public class EntityPlayerMPFake extends EntityPlayerMP {
         PlayerInteractionManager interactionManagerIn = new PlayerInteractionManager(worldIn);
         GameProfile gameprofile = player.getGameProfile();
         EntityPlayerMPFake astral = new EntityPlayerMPFake(server, worldIn, gameprofile, interactionManagerIn);
-        
+
         astral.setHealth(player.getHealth());
         interactionManagerIn.setGameType(player.interactionManager.getGameType());
         astral.stepHeight = 0.6F;
