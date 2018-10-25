@@ -464,7 +464,9 @@
              {
 +        		// ChunkLogger 0x-CARPET
 +                if(CarpetClientChunkLogger.logger.enabled) {
++                    CarpetClientChunkLogger.setReason("Generating structure");
 +                	CarpetClientChunkLogger.logger.log(this.field_76637_e,this.field_76635_g,this.field_76647_h,CarpetClientChunkLogger.Event.GENERATING_STRUCTURES);
++                    carpet.carpetclient.CarpetClientChunkLogger.resetReason();
 +                }
 +        		
                  this.func_76630_e();
@@ -481,7 +483,9 @@
 +        	}
 +    		// ChunkLogger 0x-CARPET
 +            if(CarpetClientChunkLogger.logger.enabled) {
++                CarpetClientChunkLogger.setReason("Populating chunk");
 +            	CarpetClientChunkLogger.logger.log(this.field_76637_e,this.field_76635_g,this.field_76647_h,CarpetClientChunkLogger.Event.POPULATING);
++                carpet.carpetclient.CarpetClientChunkLogger.resetReason();
 +            }
 +    		
              p_186034_1_.func_185931_b(this.field_76635_g, this.field_76647_h);
