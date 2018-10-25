@@ -24,12 +24,12 @@
 @@ -308,6 +313,8 @@
              nbttagcompound1 = this.field_72412_k.func_75752_b(p_72380_1_);
          }
-
+ 
 +        p_72380_1_.postReadFromNBT();
 +
          return nbttagcompound1;
      }
-
+ 
 @@ -343,6 +350,8 @@
  
          worldserver.func_72838_d(p_72377_1_);
@@ -52,11 +52,11 @@
  
          for (EntityPlayerMP entityplayermp1 : list)
          {
-+        	if(entityplayermp1 instanceof EntityPlayerMPFake)
-+        	{
-+        		entityplayermp1.func_174812_G();
-+        		continue;
-+        	}
++            if (entityplayermp1 instanceof EntityPlayerMPFake)
++            {
++                entityplayermp1.func_174812_G();
++                continue;
++            }
              entityplayermp1.field_71135_a.func_194028_b(new TextComponentTranslation("multiplayer.disconnect.duplicate_login", new Object[0]));
          }
  
