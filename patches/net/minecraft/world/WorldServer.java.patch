@@ -204,7 +204,17 @@
  
                  this.field_72984_F.func_76319_b();
                  this.field_94579_S.clear();
-@@ -1057,6 +1137,7 @@
+@@ -959,6 +1039,9 @@
+                     chunkproviderserver.func_189549_a(chunk);
+                 }
+             }
++
++            if (CarpetSettings.getBool("artificialPermaloader"))
++                chunkproviderserver.artificialPermaload();
+         }
+     }
+ 
+@@ -1057,6 +1140,7 @@
          this.field_175729_l.func_76038_a(p_72923_1_.func_145782_y(), p_72923_1_);
          this.field_175741_N.put(p_72923_1_.func_110124_au(), p_72923_1_);
          Entity[] aentity = p_72923_1_.func_70021_al();
@@ -212,7 +222,7 @@
  
          if (aentity != null)
          {
-@@ -1152,11 +1233,14 @@
+@@ -1152,11 +1236,14 @@
  
              for (BlockEventData blockeventdata : this.field_147490_S[i])
              {

@@ -289,6 +289,7 @@ public class CarpetSettings
                                 .extraInfo("WARNING! Don't set to low click speed unless necessary."),
   rule("randomTickOptimization","fix", "Stops blocks which don't need to be random ticked from being random ticked")
                                 .extraInfo("Fixed in 1.13"),
+  rule("artificialPermaloader", "creative", "The game acts as if there is a permaloader running"),
 
         };
         for (CarpetSettingEntry rule: RuleList)

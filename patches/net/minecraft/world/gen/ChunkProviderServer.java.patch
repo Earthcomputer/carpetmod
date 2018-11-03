@@ -1,13 +1,15 @@
 --- ../src-base/minecraft/net/minecraft/world/gen/ChunkProviderServer.java
 +++ ../src-work/minecraft/net/minecraft/world/gen/ChunkProviderServer.java
-@@ -27,13 +27,19 @@
+@@ -27,15 +27,29 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
 +import net.minecraft.nbt.NBTTagList;
 +import carpet.CarpetSettings;
 +import carpet.carpetclient.CarpetClientChunkLogger;
++import carpet.utils.HashUtils;
 +import carpet.utils.TickingArea;
++import java.util.HashSet;
 +import net.minecraft.entity.Entity;
 +
  public class ChunkProviderServer implements IChunkProvider
@@ -23,8 +25,16 @@
 +    public final Long2ObjectMap<Chunk> field_73244_f = new Long2ObjectOpenHashMap<Chunk>(8192); // CM changed to public for commandUnload
      private final WorldServer field_73251_h;
  
++    private int permaloaderChunksLeft = 0; //CM artificial permaloader
++    public void artificialPermaload()
++    {
++        permaloaderChunksLeft = 100;
++    }
++
      public ChunkProviderServer(WorldServer p_i46838_1_, IChunkLoader p_i46838_2_, IChunkGenerator p_i46838_3_)
-@@ -50,8 +56,18 @@
+     {
+         this.field_73251_h = p_i46838_1_;
+@@ -50,8 +64,18 @@
  
      public void func_189549_a(Chunk p_189549_1_)
      {
@@ -44,7 +54,17 @@
              this.field_73248_b.add(Long.valueOf(ChunkPos.func_77272_a(p_189549_1_.field_76635_g, p_189549_1_.field_76647_h)));
              p_189549_1_.field_189550_d = true;
          }
-@@ -76,6 +92,11 @@
+@@ -66,6 +90,9 @@
+             Chunk chunk = (Chunk)objectiterator.next();
+             this.func_189549_a(chunk);
+         }
++
++        if (CarpetSettings.getBool("artificialPermaloader"))
++            artificialPermaload();
+     }
+ 
+     @Nullable
+@@ -76,6 +103,11 @@
  
          if (chunk != null)
          {
@@ -56,7 +76,7 @@
              chunk.field_189550_d = false;
          }
  
-@@ -93,9 +114,17 @@
+@@ -93,9 +125,17 @@
  
              if (chunk != null)
              {
@@ -74,7 +94,7 @@
              }
          }
  
-@@ -113,6 +142,11 @@
+@@ -113,6 +153,11 @@
              try
              {
                  chunk = this.field_186029_c.func_185932_a(p_186025_1_, p_186025_2_);
@@ -86,7 +106,7 @@
              }
              catch (Throwable throwable)
              {
-@@ -123,7 +157,7 @@
+@@ -123,7 +168,7 @@
                  crashreportcategory.func_71507_a("Generator", this.field_186029_c);
                  throw new ReportedException(crashreport);
              }
@@ -95,7 +115,7 @@
              this.field_73244_f.put(i, chunk);
              chunk.func_76631_c();
              chunk.func_186030_a(this, this.field_186029_c);
-@@ -185,6 +219,8 @@
+@@ -185,6 +230,8 @@
  
      public boolean func_186027_a(boolean p_186027_1_)
      {
@@ -104,7 +124,7 @@
          int i = 0;
          List<Chunk> list = Lists.newArrayList(this.field_73244_f.values());
  
-@@ -224,6 +260,10 @@
+@@ -224,11 +271,26 @@
          {
              if (!this.field_73248_b.isEmpty())
              {
@@ -115,7 +135,23 @@
                  Iterator<Long> iterator = this.field_73248_b.iterator();
  
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
-@@ -238,8 +278,14 @@
+                 {
+                     Long olong = iterator.next();
++
++                    //CM artificial permaloader
++                    if (permaloaderChunksLeft > 0 && HashUtils.getBucketNumber((HashSet<Long>)field_73248_b, olong) > 0)
++                    {
++                        int permaloaderChunksThisTick = Math.min(permaloaderChunksLeft, 100 - i);
++                        permaloaderChunksLeft -= permaloaderChunksThisTick;
++                        i += permaloaderChunksThisTick;
++                        if (i >= 100)
++                            break;
++                    }
++
+                     Chunk chunk = (Chunk)this.field_73244_f.get(olong);
+ 
+                     if (chunk != null && chunk.field_189550_d)
+@@ -238,9 +300,19 @@
                          this.func_73243_a(chunk);
                          this.field_73244_f.remove(olong);
                          ++i;
@@ -128,9 +164,14 @@
                  }
 +                carpet.carpetclient.CarpetClientChunkLogger.resetReason();
              }
++            else
++            {
++                permaloaderChunksLeft = 0; //CM artificial permaloader
++            }
  
              this.field_73247_e.func_75817_a();
-@@ -283,9 +329,17 @@
+         }
+@@ -283,9 +355,17 @@
      {
          return this.field_73244_f.containsKey(ChunkPos.func_77272_a(p_73149_1_, p_73149_2_));
      }

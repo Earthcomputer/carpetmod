@@ -96,6 +96,8 @@ public class CommandUnload extends CommandCarpetBase
             }
         }
 
+        if (CarpetSettings.getBool("artificialPermaloader"))
+            notifyCommandListener(sender, this, "Note: Artificial Permaloader is active");
         if (order)
         {
             List<String> orders = UnloadOrder.check_unload_order((WorldServer)sender.getEntityWorld(), pos, pos2);
