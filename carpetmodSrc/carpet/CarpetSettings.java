@@ -178,7 +178,6 @@ public class CarpetSettings
     public static boolean commandAstral = true;
     public static boolean randomTickOptimization = false;
     public static boolean artificialPermaloader = false;
-    public static boolean antiCheat = false;
 
     public static long setSeed = 0;
 
