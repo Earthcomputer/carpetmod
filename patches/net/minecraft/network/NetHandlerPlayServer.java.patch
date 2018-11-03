@@ -92,7 +92,7 @@
                              {
 -                                itemstack1.func_190917_f(i);
 +                                // Crafting window duplication clitch fixed CARPET-XCOM
-+                                if(!CarpetSettings.getBool("craftingWindowDuplicationFix") || ItemStack.func_185132_d(itemstack, itemstack1) )
++                                if(!CarpetSettings.craftingWindowDuplicationFix || ItemStack.func_185132_d(itemstack, itemstack1) )
 +                                {
 +                                    itemstack1.func_190917_f(i);
 +                                }

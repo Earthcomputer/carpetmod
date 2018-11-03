@@ -96,7 +96,7 @@ public class CommandUnload extends CommandCarpetBase
             }
         }
 
-        if (CarpetSettings.getBool("artificialPermaloader"))
+        if (CarpetSettings.artificialPermaloader)
             notifyCommandListener(sender, this, "Note: Artificial Permaloader is active");
         if (order)
         {
@@ -112,7 +112,7 @@ public class CommandUnload extends CommandCarpetBase
 
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
-        if (!CarpetSettings.getBool("commandUnload"))
+        if (!CarpetSettings.commandUnload)
         {
             return Collections.<String>emptyList();
         }

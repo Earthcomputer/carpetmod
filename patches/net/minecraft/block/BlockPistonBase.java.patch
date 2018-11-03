@@ -16,7 +16,7 @@
      public void func_180633_a(World p_180633_1_, BlockPos p_180633_2_, IBlockState p_180633_3_, EntityLivingBase p_180633_4_, ItemStack p_180633_5_)
      {
 -        p_180633_1_.func_180501_a(p_180633_2_, p_180633_3_.func_177226_a(field_176387_N, EnumFacing.func_190914_a(p_180633_2_, p_180633_4_)), 2);
-+        if (!CarpetSettings.getBool("accurateBlockPlacement"))
++        if (!CarpetSettings.accurateBlockPlacement)
 +            p_180633_1_.func_180501_a(p_180633_2_, p_180633_3_.func_177226_a(field_176387_N, EnumFacing.func_190914_a(p_180633_2_, p_180633_4_)), 2);
  
          if (!p_180633_1_.field_72995_K)
@@ -40,7 +40,7 @@
 +            {
 +                p_176316_1_.func_180501_a(p_176316_2_,  p_176316_3_.func_177226_a(field_176320_b,  Boolean.valueOf(false)), 2);
 +            }
-+            if (CarpetSettings.pistonGhostBlocksFix == 2)
++            if (CarpetSettings.pistonGhostBlocksFix == CarpetSettings.EnumPistonGhostBlocksFix.CLIENT_AND_SERVER)
 +                p_176316_1_.func_175641_c(p_176316_2_, this, 1, enumfacing.func_176745_a() | ignoreMovingBlockMeta(p_176316_1_, p_176316_2_, enumfacing));
 +            else
 +                p_176316_1_.func_175641_c(p_176316_2_, this, 1, enumfacing.func_176745_a() );

@@ -1,5 +1,6 @@
 package carpet;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,6 +14,9 @@ import java.io.FileNotFoundException;
 
 import carpet.carpetclient.CarpetClientChunkLogger;
 import carpet.helpers.RandomTickOptimization;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,38 +66,119 @@ public class CarpetSettings
     //those don't have to mimic defaults - defaults will be '
     //static store
     public static boolean extendedConnectivity = false;
-    public static int pistonGhostBlocksFix = 0;
-    public static boolean quasiConnectivity = true;
-    public static boolean hopperCounters = true;
+    public static boolean portalSuffocationFix = false;
+    public static EnumPistonGhostBlocksFix pistonGhostBlocksFix = EnumPistonGhostBlocksFix.FALSE;
+    public static boolean miningGhostBlocksFix = false;
+    public static boolean superSecretSetting = false;
+    public static boolean portalTeleportationFix = false;
+    public static boolean inconsistentRedstoneTorchesFix = false;
+    public static boolean llamaOverfeedingFix = false;
+    public static boolean invisibilityFix = false;
+    public static boolean portalCreativeDelay = false;
+    public static boolean potionsDespawnFix = false;
+    public static boolean ctrlQCraftingFix = false;
+    public static boolean liquidsNotRandom = false;
+    public static boolean mobsDontControlMinecarts = false;
+    public static boolean persistentParrots = false;
+    public static boolean breedingMountingDisabled = false;
+    public static boolean growingUpWallJump = false;
+    public static boolean reloadSuffocationFix = false;
+    public static boolean xpNoCooldown = false;
+    public static boolean combineXPOrbs = false;
+    public static boolean stackableEmptyShulkerBoxes = false;
+    public static boolean relaxedBlockPlacement = false;
+    public static boolean rideableGhasts = false;
+    public static boolean explosionNoBlockDamage = false;
+    public static boolean tntPrimerMomentumRemoved = false;
     public static boolean fastRedstoneDust = false;
-    public static float tntRandomRange = -1;
-    public static int pushLimit = 12;
-    public static int railPowerLimit = 8;
-    public static int waterFlow = 0;
-    public static boolean wirelessRedstone;
-    public static boolean optimizedTileEntities = false;
-    public static boolean mergeTNT = false;
-    public static boolean unloadedEntityFix = false;
-    public static float hardcodeTNTangle = -1;
-    public static boolean antiCheat = false;
+    public static boolean accurateBlockPlacement = false;
     public static boolean optimizedTNT = false;
     public static boolean huskSpawningInTemples = false;
     public static boolean shulkerSpawningInEndCities = false;
+    public static boolean watchdogFix = false;
+    public static boolean wirelessRedstone = false;
+    public static boolean optimizedTileEntities = false;
+    public static boolean mergeTNT = false;
+    public static boolean repeaterPoweredTerracota = false;
+    public static boolean unloadedEntityFix = false;
+    public static boolean TNTDoNotUpdate = false;
+    public static boolean antiCheatSpeed = false;
+    public static boolean quasiConnectivity = true;
+    public static boolean flippinCactus = false;
+    public static boolean hopperCounters = false;
+    public static boolean renewableElderGuardians = false;
+    public static boolean optimizedDespawnRange = false;
     public static boolean redstoneMultimeter = false;
     public static boolean movableTileEntities = false;
+    public static boolean displayMobAI = false;
     public static boolean fastMovingEntityOptimization = false;
     public static boolean blockCollisionsOptimization = false;
-    public static boolean explosionNoBlockDamage = false;
+    public static boolean desertShrubs = false;
+    public static boolean nitwitCrafter = false;
+    public static boolean boundingBoxFix = false;
     public static boolean movingBlockLightOptimization = false;
-    public static boolean noteBlockImitation = false;
-    public static boolean displayMobAI = false;
+    public static boolean noteBlockImitationOf1_13 = false;
+    public static boolean hopperDuplicationFix = false;
+    public static boolean entityDuplicationFix = false;
+    public static boolean itemFrameDuplicationFix = false;
+    public static boolean craftingWindowDuplicationFix = false;
+    public static boolean silverFishDropGravel = false;
+    public static boolean renewablePackedIce = false;
+    public static boolean renewableDragonEggs = false;
+    public static boolean summonNaturalLightning = false;
+    public static boolean commandSpawn = true;
+    public static boolean commandTick = true;
+    public static boolean commandLog = true;
+    public static boolean commandDistance = true;
+    public static boolean commandBlockInfo = true;
+    public static boolean commandEntityInfo = true;
+    public static boolean commandUnload = true;
+    public static boolean commandCameramode = true;
+    public static boolean commandPerimeterInfo = true;
+    public static boolean commandPlayer = true;
+    public static boolean commandRNG = true;
+    public static boolean commandStructure = true;
+    public static boolean commandFillBiome = true;
+    public static boolean commandAutosave = true;
+    public static boolean commandPing = true;
     public static boolean newLight = false;
+    public static boolean carpets = false;
+    public static boolean missingTools = false;
+    public static boolean _1_8Spawning = false;
+    public static boolean pocketPushing = false;
+    public static boolean portalCaching = false;
+    public static boolean calmNetherFires = false;
+    public static boolean observersDoNonUpdate = false;
+    public static boolean flyingMachineTransparent = false;
+    public static boolean fillUpdates = true;
+    public static int pushLimit = 12;
+    public static int railPowerLimit = 9;
+    public static int fillLimit = 32768;
+    public static int maxEntityCollisions = 0;
+    public static EnumWaterFlow waterFlow = EnumWaterFlow.VANILLA;
+    public static float hardcodeTNTangle = -1;
+    public static float tntRandomRange = -1;
+    public static int sleepingThreshold = 100;
+    public static boolean spongeRandom = false;
+    public static String customMOTD = "_";
     public static boolean doubleRetraction = false;
+    public static boolean rotatorBlock = false;
     public static boolean netherRNG = false;
     public static boolean endRNG = false;
+    public static int viewDistance = 0;
+    public static boolean tickingAreas = false;
+    public static boolean disableSpawnChunks = false;
     public static int structureBlockLimit = 32;
     public static boolean chunkDebugTool = false;
+    public static boolean worldEdit = false;
+    public static boolean pistonSerializationFix = false;
+    public static boolean reloadUpdateOrderFix = false;
+    public static EnumLeashFix leashFix = EnumLeashFix.FALSE;
     public static boolean disablePlayerCollision = false;
+    public static boolean commandAstral = true;
+    public static boolean randomTickOptimization = false;
+    public static boolean artificialPermaloader = false;
+    public static boolean antiCheat = false;
 
     public static long setSeed = 0;
 
@@ -286,7 +371,7 @@ public class CarpetSettings
                                 .choices("false", "false casual cool"),
   rule("disablePlayerCollision","creative", "Disables player entity collision."),
   rule("commandAstral",     "commands", "Enables players to log out leaving there characters behind.")
-                                .extraInfo("WARNING! Don't set to low click speed unless necessary."),
+                                .extraInfo("WARNING! Don't set to low click speed unless necessary.").defaultTrue(),
   rule("randomTickOptimization","fix", "Stops blocks which don't need to be random ticked from being random ticked")
                                 .extraInfo("Fixed in 1.13"),
   rule("artificialPermaloader", "creative", "The game acts as if there is a permaloader running"),
@@ -307,50 +392,72 @@ public class CarpetSettings
     }
     public static void reload_stat(String rule)
     {
-        extendedConnectivity = CarpetSettings.getBool("extendedConnectivity");
-        quasiConnectivity = CarpetSettings.getBool("quasiConnectivity");
-        hopperCounters = CarpetSettings.getBool("hopperCounters");
-        fastRedstoneDust = CarpetSettings.getBool("fastRedstoneDust");
-        wirelessRedstone = CarpetSettings.getBool("wirelessRedstone");
-        unloadedEntityFix = CarpetSettings.getBool("unloadedEntityFix");
-        optimizedTileEntities = CarpetSettings.getBool("optimizedTileEntities");
-        hardcodeTNTangle = CarpetSettings.getFloat("hardcodeTNTangle");
-        tntRandomRange = CarpetSettings.getFloat("tntRandomRange");
-        antiCheat = CarpetSettings.getBool("antiCheatSpeed");
-        optimizedTNT = CarpetSettings.getBool("optimizedTNT");
-        huskSpawningInTemples = CarpetSettings.getBool("huskSpawningInTemples");
-        redstoneMultimeter = CarpetSettings.getBool("redstoneMultimeter");
-        movableTileEntities = CarpetSettings.getBool("movableTileEntities");
-        fastMovingEntityOptimization = CarpetSettings.getBool("fastMovingEntityOptimization");
-        blockCollisionsOptimization = CarpetSettings.getBool("blockCollisionsOptimization");
-        explosionNoBlockDamage = CarpetSettings.getBool("explosionNoBlockDamage");
-        movingBlockLightOptimization = CarpetSettings.getBool("movingBlockLightOptimization");
-        noteBlockImitation = CarpetSettings.getBool("noteBlockImitationOf1.13");
-        displayMobAI = CarpetSettings.getBool("displayMobAI");
-        newLight = CarpetSettings.getBool("newLight");
-        doubleRetraction = CarpetSettings.getBool("doubleRetraction");
-        netherRNG = CarpetSettings.getBool("netherRNG");
-        endRNG = CarpetSettings.getBool("endRNG");
-        structureBlockLimit = CarpetSettings.getInt("structureBlockLimit");
-        chunkDebugTool = CarpetSettings.getBool("chunkDebugTool");
-        mergeTNT = CarpetSettings.getBool("mergeTNT");
-        disablePlayerCollision = CarpetSettings.getBool("disablePlayerCollision");
-
-        if ("pistonGhostBlocksFix".equalsIgnoreCase(rule))
+        // AUTOMATIC RULE SETTING
+        String fieldName = rule.replaceAll("[^a-zA-Z0-9_]", "_");
+        if (Character.isDigit(fieldName.charAt(0)))
+            fieldName = "_" + fieldName;
+        try
         {
-            pistonGhostBlocksFix = 0;
-            if("true".equalsIgnoreCase(CarpetSettings.getString("pistonGhostBlocksFix")))
+            Field field = null;
+            for (Field f : CarpetSettings.class.getFields())
             {
-                pistonGhostBlocksFix = 1;
+                if (f.getName().equalsIgnoreCase(fieldName))
+                {
+                    field = f;
+                    break;
+                }
             }
-            if("clientAndServer".equalsIgnoreCase(CarpetSettings.getString("pistonGhostBlocksFix")))
+            if (field == null)
             {
-                pistonGhostBlocksFix = 2;
+                LOG.error("Unable to find corresponding field to rule \"" + rule + "\"");
+            }
+            else
+            {
+                Class<?> type = field.getType();
+                if (type == boolean.class)
+                {
+                    field.setBoolean(null, CarpetSettings.getBool(rule));
+                }
+                else if (type == int.class)
+                {
+                    field.setInt(null, CarpetSettings.getInt(rule));
+                }
+                else if (type == float.class)
+                {
+                    field.setFloat(null, CarpetSettings.getFloat(rule));
+                }
+                else if (type == String.class)
+                {
+                    field.set(null, CarpetSettings.getString(rule));
+                }
+                else if (type.isEnum() && IStringSerializable.class.isAssignableFrom(type))
+                {
+                    String newValue = CarpetSettings.getString(rule);
+                    for (Object o : type.getEnumConstants()) {
+                        IStringSerializable obj = (IStringSerializable) o;
+                        if (obj.getName().equalsIgnoreCase(newValue)) {
+                            field.set(null, o);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    LOG.error("Unknown setting type for rule \"" + rule + "\"");
+                }
             }
         }
-        else if ("flyingMachineTransparent".equalsIgnoreCase(rule))
+        catch (Exception e)
         {
-            if(CarpetSettings.getBool("flyingMachineTransparent"))
+            throw new AssertionError(e);
+        }
+
+
+
+        // SPECIFIC ACTIONS FOR EACH RULE
+        if ("flyingMachineTransparent".equalsIgnoreCase(rule))
+        {
+            if(flyingMachineTransparent)
             {
                 Blocks.OBSERVER.setLightOpacity(0);
                 Blocks.REDSTONE_BLOCK.setLightOpacity(0);
@@ -365,22 +472,22 @@ public class CarpetSettings
         }
         else if ("liquidsNotRandom".equalsIgnoreCase(rule))
         {
-            RandomTickOptimization.setLiquidRandomTicks(!CarpetSettings.getBool("liquidsNotRandom"));
+            RandomTickOptimization.setLiquidRandomTicks(!liquidsNotRandom);
             RandomTickOptimization.recalculateAllChunks();
         }
         else if ("spongeRandom".equalsIgnoreCase(rule))
         {
-            RandomTickOptimization.setSpongeRandomTicks(CarpetSettings.getBool("spongeRandom"));
+            RandomTickOptimization.setSpongeRandomTicks(spongeRandom);
             RandomTickOptimization.recalculateAllChunks();
         }
         else if ("randomTickOptimization".equalsIgnoreCase(rule))
         {
-            RandomTickOptimization.setUselessRandomTicks(!CarpetSettings.getBool("randomTickOptimization"));
+            RandomTickOptimization.setUselessRandomTicks(!randomTickOptimization);
             RandomTickOptimization.recalculateAllChunks();
         }
         else if ("reloadSuffocationFix".equalsIgnoreCase(rule))
         {
-            if(CarpetSettings.getBool("reloadSuffocationFix"))
+            if(reloadSuffocationFix)
             {
                 AxisAlignedBB.margin = 1.0 / (1L<<27);
             }
@@ -389,43 +496,24 @@ public class CarpetSettings
                 AxisAlignedBB.margin = 0;
             }
         }
-        else if("pushLimit".equalsIgnoreCase(rule))
-        {
-            pushLimit = getInt("pushLimit");
-        }
         else if("railPowerLimit".equalsIgnoreCase(rule))
         {
             // Rail limit -1 because 8 is the code default. But counted to 9 including the source in human terms.
-            railPowerLimit = getInt("railPowerLimit") - 1;
-        }
-        else if("waterFlow".equalsIgnoreCase(rule))
-        {
-            waterFlow = 0;
-            if ("optimized".equalsIgnoreCase(getString("waterFlow")))
-            {
-                waterFlow = 3;
-            }
-            if ("correct".equalsIgnoreCase(getString("waterFlow")))
-            {
-                waterFlow = 1;
-            }
+            railPowerLimit--;
         }
         else if("shulkerSpawningInEndCities".equalsIgnoreCase(rule))
         {
-            if(CarpetSettings.getBool("shulkerSpawningInEndCities"))
+            if(shulkerSpawningInEndCities)
             {
                 net.minecraft.world.gen.structure.MapGenEndCity.shulkerSpawning(true);
-                shulkerSpawningInEndCities = true;
             }
             else
             {
                 net.minecraft.world.gen.structure.MapGenEndCity.shulkerSpawning(false);
-                shulkerSpawningInEndCities = false;
             }
         }
         else if ("viewDistance".equalsIgnoreCase(rule))
         {
-            int viewDistance = getInt("viewDistance");
             if (viewDistance < 2)
                 viewDistance = ((DedicatedServer) CarpetServer.minecraft_server).getIntProperty("view-distance", 10);
             if (viewDistance > 64)
@@ -435,14 +523,14 @@ public class CarpetSettings
         }
         else if ("tickingAreas".equalsIgnoreCase(rule))
         {
-            if (CarpetSettings.getBool("tickingAreas") && CarpetServer.minecraft_server.worlds != null)
+            if (tickingAreas && CarpetServer.minecraft_server.worlds != null)
             {
                 TickingArea.initialChunkLoad(CarpetServer.minecraft_server, false);
             }
         }
         else if ("disableSpawnChunks".equalsIgnoreCase(rule))
         {
-            if (!CarpetSettings.getBool("disableSpawnChunks") && CarpetServer.minecraft_server.worlds != null)
+            if (!disableSpawnChunks && CarpetServer.minecraft_server.worlds != null)
             {
                 World overworld = CarpetServer.minecraft_server.worlds[0];
                 for (ChunkPos chunk : new TickingArea.SpawnChunks().listIncludedChunks(overworld))
@@ -450,8 +538,17 @@ public class CarpetSettings
                     overworld.getChunkProvider().provideChunk(chunk.x, chunk.z);
                 }
             }
-        } else if (!chunkDebugTool) {
+        }
+        else if (!chunkDebugTool)
+        {
             CarpetClientChunkLogger.logger.disable();
+        }
+        else if ("superSecretSetting".equalsIgnoreCase(rule))
+        {
+            if (superSecretSetting && CarpetServer.minecraft_server.getPlayerList() != null)
+            {
+                CarpetServer.minecraft_server.getPlayerList().sendMessage(new TextComponentString(TextFormatting.YELLOW + "Earthcomputer joined the game"));
+            }
         }
     }
     public static void apply_settings_from_conf(MinecraftServer server)
@@ -886,6 +983,54 @@ public class CarpetSettings
         public boolean isStrict()
         {
             return strict;
+        }
+    }
+
+    public static enum EnumPistonGhostBlocksFix implements IStringSerializable {
+        FALSE("false"), TRUE("true"), CLIENT_AND_SERVER("clientAndServer");
+
+        private final String name;
+        private EnumPistonGhostBlocksFix(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+    }
+
+    public static enum EnumWaterFlow implements IStringSerializable {
+        VANILLA("vanilla", 0), OPTIMIZED("optimized", 3), CORRECT("correct", 1);
+
+        private final String name;
+        private final int flow;
+        private EnumWaterFlow(String name, int flow) {
+            this.name = name;
+            this.flow = flow;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        public int getFlow() {
+            return flow;
+        }
+    }
+
+    public static enum EnumLeashFix implements IStringSerializable {
+        FALSE("false"), CASUAL("casual"), COOL("cool");
+
+        private final String name;
+        private EnumLeashFix(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getName() {
+            return name;
         }
     }
 }
