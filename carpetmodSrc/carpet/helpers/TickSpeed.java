@@ -2,6 +2,7 @@ package carpet.helpers;
 
 import carpet.CarpetServer;
 import carpet.utils.Messenger;
+import com.google.common.collect.ComparisonChain;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
@@ -10,15 +11,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.ServerStatusResponse;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.management.PlayerChunkMap;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class TickSpeed
 {
@@ -32,8 +34,6 @@ public class TickSpeed
     public static EntityPlayer time_advancerer = null;
     public static String tick_warp_callback = null;
     public static ICommandSender tick_warp_sender = null;
-    public static boolean is_superHot = false;
-    public static boolean is_paused_setting = false;
     public static boolean is_paused = false;
     public static int ticks_to_run_in_pause = 0;
     private static int frozenTickCounter = 0;
@@ -141,14 +141,12 @@ public class TickSpeed
         }
     }
 
-    public static void pausedTick(MinecraftServer server)
+    public static boolean pausedTick(MinecraftServer server)
     {
         if (ticks_to_run_in_pause > 0)
         {
             ticks_to_run_in_pause--;
-            is_paused = false;
-            server.tick();
-            is_paused = is_paused_setting;
+            return false;
         }
 
         frozenTickCounter++;
@@ -175,11 +173,52 @@ public class TickSpeed
                         world.provider.getDimensionType().getId());
             }
 
-            //TODO: part of playerchunkmap tick to send loaded chunks to clients
+            // PlayerChunkMap tick
+            PlayerChunkMap pcm = world.playerChunkMap;
+            if (frozenTickCounter % 8000L == 0)
+            {
+                for (PlayerChunkMapEntry entry : pcm.entries)
+                {
+                    entry.update();
+                }
+            }
+            if (pcm.sortSendToPlayers && frozenTickCounter % 4L == 2L)
+            {
+                pcm.sortSendToPlayers = false;
+                Collections.sort(pcm.pendingSendToPlayers, (a, b) -> ComparisonChain.start().compare(a.getClosestPlayerDistance(), b.getClosestPlayerDistance()).result());
+            }
+            if (!pcm.pendingSendToPlayers.isEmpty())
+            {
+                int allowedEntriesLeft = 81;
+                Iterator<PlayerChunkMapEntry> itr = pcm.pendingSendToPlayers.iterator();
+
+                while (itr.hasNext())
+                {
+                    PlayerChunkMapEntry entry = itr.next();
+
+                    if (entry.sendToPlayers())
+                    {
+                        itr.remove();
+                        allowedEntriesLeft--;
+
+                        if (allowedEntriesLeft < 0)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
             // Send movement of other players to other clients
             world.getEntityTracker().tick();
             // Player movement and stuff
             world.tickPlayers();
+        }
+
+        // Server console handling
+        if (server instanceof DedicatedServer)
+        {
+            ((DedicatedServer) server).executePendingCommands();
         }
 
         // Update server status response
@@ -201,6 +240,8 @@ public class TickSpeed
 
         server.getNetworkSystem().networkTick();
         server.getPlayerList().onTick();
+
+        return true;
     }
 
     public static void add_ticks_to_run_in_pause(int advance)

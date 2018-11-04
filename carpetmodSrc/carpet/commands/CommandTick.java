@@ -82,8 +82,8 @@ public class CommandTick extends CommandCarpetBase
         }
         else if ("freeze".equalsIgnoreCase(args[0]))
         {
-            TickSpeed.is_paused_setting = !TickSpeed.is_paused_setting;
-            if (TickSpeed.is_paused_setting)
+            TickSpeed.is_paused = !TickSpeed.is_paused;
+            if (TickSpeed.is_paused)
             {
                 notifyCommandListener(sender, this, "Game is paused");
             }

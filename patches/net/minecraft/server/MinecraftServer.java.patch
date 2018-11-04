@@ -154,18 +154,17 @@
                      this.field_71296_Q = true;
                  }
              }
-@@ -588,10 +636,23 @@
+@@ -588,10 +636,22 @@
      {
      }
  
 -    protected void func_71217_p()
 +    public void func_71217_p() //CM changed to public for tick freeze
      {
-+        TickSpeed.is_paused = TickSpeed.is_paused_setting;
 +        if (TickSpeed.is_paused)
 +        {
-+            TickSpeed.pausedTick(this);
-+            return;
++            if (TickSpeed.pausedTick(this))
++                return;
 +        }
 +
          long i = System.nanoTime();
@@ -179,7 +178,7 @@
  
          if (this.field_71295_T)
          {
-@@ -621,12 +682,17 @@
+@@ -621,12 +681,17 @@
  
          if (this.field_71315_w % 900 == 0)
          {
@@ -198,7 +197,7 @@
          this.field_71304_b.func_76320_a("tallying");
          this.field_71311_j[this.field_71315_w % 100] = System.nanoTime() - i;
          this.field_71304_b.func_76319_b();
-@@ -644,6 +710,16 @@
+@@ -644,6 +709,16 @@
  
          this.field_71304_b.func_76319_b();
          this.field_71304_b.func_76319_b();
@@ -215,7 +214,7 @@
      }
  
      public void func_71190_q()
-@@ -710,10 +786,12 @@
+@@ -710,10 +785,12 @@
              this.field_71312_k[j][this.field_71315_w % 100] = System.nanoTime() - i;
          }
  
