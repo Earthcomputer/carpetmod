@@ -74,7 +74,7 @@ public class CommandTick extends CommandCarpetBase
             }
 
             String message = TickSpeed.tickrate_advance(player, advance, s, icommandsender);
-            if ("".equals(message))
+            if (!"".equals(message))
             {
                 notifyCommandListener(sender, this, message);
             }
