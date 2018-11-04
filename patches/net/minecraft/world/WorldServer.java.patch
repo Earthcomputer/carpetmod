@@ -19,13 +19,11 @@
      private final Set<NextTickListEntry> field_73064_N = Sets.<NextTickListEntry>newHashSet();
      private final TreeSet<NextTickListEntry> field_73065_O = new TreeSet<NextTickListEntry>();
      private final Map<UUID, Entity> field_175741_N = Maps.<UUID, Entity>newHashMap();
-@@ -183,12 +188,19 @@
+@@ -183,12 +188,16 @@
              this.func_73053_d();
          }
  
 +        String world_name = this.field_73011_w.func_186058_p().func_186065_b();
-+        if (TickSpeed.process_entities)
-+        {// extra indent
 +
          this.field_72984_F.func_76320_a("mobSpawner");
 +        CarpetProfiler.start_section(world_name, "spawning");
@@ -35,19 +33,10 @@
              this.field_175742_R.func_77192_a(this, this.field_72985_G, this.field_72992_H, this.field_72986_A.func_82573_f() % 400L == 0L);
          }
 +        CarpetProfiler.end_current_section();
-+        }//end indent
  
          this.field_72984_F.func_76318_c("chunkSource");
          this.field_73020_y.func_73156_b();
-@@ -199,26 +211,56 @@
-             this.func_175692_b(j);
-         }
- 
-+        if (TickSpeed.process_entities)
-+        { // CM extra indent
-         this.field_72986_A.func_82572_b(this.field_72986_A.func_82573_f() + 1L);
- 
-         if (this.func_82736_K().func_82766_b("doDaylightCycle"))
+@@ -205,20 +214,44 @@
          {
              this.field_72986_A.func_76068_b(this.field_72986_A.func_76073_f() + 1L);
          }
@@ -65,7 +54,6 @@
 +		
 +		CarpetProfiler.end_current_section();
 +		
-+		}
 +		CarpetProfiler.start_section(world_name, "blocks");
          this.field_72984_F.func_76318_c("tickBlocks");
          this.func_147456_g();
@@ -73,15 +61,12 @@
          this.field_72984_F.func_76318_c("chunkMap");
          this.field_73063_M.func_72693_b();
 +
-+        if (TickSpeed.process_entities)
-+        { // CM indent
          this.field_72984_F.func_76318_c("village");
          this.field_72982_D.func_75544_a();
          this.field_175740_d.func_75528_a();
          this.field_72984_F.func_76318_c("portalForcer");
          this.field_85177_Q.func_85189_a(this.func_82737_E());
-+		}
-+		
++
 +		// NewLight PHIPRO-CARPET
 +		if (CarpetSettings.newLight)
 +        {
@@ -98,7 +83,7 @@
      }
  
      @Nullable
-@@ -254,8 +296,15 @@
+@@ -254,8 +287,15 @@
                      ++j;
                  }
              }
@@ -116,7 +101,7 @@
          }
      }
  
-@@ -289,6 +338,28 @@
+@@ -289,6 +329,28 @@
      {
          if (this.field_73068_P && !this.field_72995_K)
          {
@@ -145,7 +130,7 @@
              for (EntityPlayer entityplayer : this.field_73010_i)
              {
                  if (!entityplayer.func_175149_v() && !entityplayer.func_71026_bH())
-@@ -305,7 +376,7 @@
+@@ -305,7 +367,7 @@
          }
      }
  
@@ -154,19 +139,7 @@
      {
          return this.func_72863_F().func_73149_a(p_175680_1_, p_175680_2_);
      }
-@@ -357,6 +428,11 @@
-                 chunk.func_76594_o();
-                 this.field_72984_F.func_76318_c("tickChunk");
-                 chunk.func_150804_b(false);
-+                if (!TickSpeed.process_entities)
-+                { // skipping the rest of the block processing
-+                    this.field_72984_F.func_76319_b();
-+                    continue;
-+                }
-                 this.field_72984_F.func_76318_c("thunder");
- 
-                 if (flag && flag1 && this.field_73012_v.nextInt(100000) == 0)
-@@ -445,7 +521,7 @@
+@@ -445,7 +507,7 @@
          }
      }
  
@@ -175,7 +148,7 @@
      {
          BlockPos blockpos = this.func_175725_q(p_175736_1_);
          AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.func_177958_n(), this.func_72800_K(), blockpos.func_177952_p()))).func_186662_g(3.0D);
-@@ -505,9 +581,10 @@
+@@ -505,9 +567,10 @@
                      {
                          iblockstate.func_177230_c().func_180650_b(this, p_175654_1_, iblockstate, this.field_73012_v);
                      }
@@ -187,7 +160,16 @@
              }
  
              p_175654_3_ = 1;
-@@ -679,6 +756,8 @@
+@@ -567,7 +630,7 @@
+         super.func_72939_s();
+     }
+ 
+-    protected void func_184147_l()
++    public void func_184147_l() //CM changed to public for tick freeze
+     {
+         super.func_184147_l();
+         this.field_72984_F.func_76318_c("players");
+@@ -679,6 +742,8 @@
  
                      if (this.func_175707_a(nextticklistentry1.field_180282_a.func_177982_a(0, 0, 0), nextticklistentry1.field_180282_a.func_177982_a(0, 0, 0)))
                      {
@@ -196,7 +178,7 @@
                          IBlockState iblockstate = this.func_180495_p(nextticklistentry1.field_180282_a);
  
                          if (iblockstate.func_185904_a() != Material.field_151579_a && Block.func_149680_a(iblockstate.func_177230_c(), nextticklistentry1.func_151351_a()))
-@@ -701,6 +780,7 @@
+@@ -701,6 +766,7 @@
                          this.func_175684_a(nextticklistentry1.field_180282_a, nextticklistentry1.func_151351_a(), 0);
                      }
                  }
@@ -204,7 +186,7 @@
  
                  this.field_72984_F.func_76319_b();
                  this.field_94579_S.clear();
-@@ -959,6 +1039,9 @@
+@@ -959,6 +1025,9 @@
                      chunkproviderserver.func_189549_a(chunk);
                  }
              }
@@ -214,7 +196,7 @@
          }
      }
  
-@@ -1057,6 +1140,7 @@
+@@ -1057,6 +1126,7 @@
          this.field_175729_l.func_76038_a(p_72923_1_.func_145782_y(), p_72923_1_);
          this.field_175741_N.put(p_72923_1_.func_110124_au(), p_72923_1_);
          Entity[] aentity = p_72923_1_.func_70021_al();
@@ -222,7 +204,7 @@
  
          if (aentity != null)
          {
-@@ -1152,11 +1236,14 @@
+@@ -1152,11 +1222,14 @@
  
              for (BlockEventData blockeventdata : this.field_147490_S[i])
              {

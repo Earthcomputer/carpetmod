@@ -2,14 +2,27 @@ package carpet.helpers;
 
 import carpet.CarpetServer;
 import carpet.utils.Messenger;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.ServerStatusResponse;
+import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.WorldServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 
 public class TickSpeed
 {
-    public static final int PLAYER_GRACE = 2;
+    private static final Logger LOGGER = LogManager.getLogger();
     public static float tickrate = 20.0f;
     public static long mspt = 50l;
     public static long warp_temp_mspt = 1l;
@@ -19,23 +32,11 @@ public class TickSpeed
     public static EntityPlayer time_advancerer = null;
     public static String tick_warp_callback = null;
     public static ICommandSender tick_warp_sender = null;
-    public static int player_active_timeout = 0;
-    public static boolean process_entities = true;
-    public static boolean is_paused = false;
     public static boolean is_superHot = false;
-
-    public static void reset_player_active_timeout()
-    {
-        if (player_active_timeout < PLAYER_GRACE)
-        {
-            player_active_timeout = PLAYER_GRACE;
-        }
-    }
-
-    public static void add_ticks_to_run_in_pause(int ticks)
-    {
-        player_active_timeout = PLAYER_GRACE+ticks;
-    }
+    public static boolean is_paused_setting = false;
+    public static boolean is_paused = false;
+    public static int ticks_to_run_in_pause = 0;
+    private static int frozenTickCounter = 0;
 
     public static void tickrate(float rate)
     {
@@ -140,29 +141,70 @@ public class TickSpeed
         }
     }
 
-    public static void tick(MinecraftServer server)
+    public static void pausedTick(MinecraftServer server)
     {
-        process_entities = true;
-        if (player_active_timeout > 0)
+        if (ticks_to_run_in_pause > 0)
         {
-            player_active_timeout--;
+            ticks_to_run_in_pause--;
+            is_paused = false;
+            server.tick();
+            is_paused = is_paused_setting;
         }
-        if (is_paused)
+
+        frozenTickCounter++;
+        long time = System.nanoTime();
+
+        // Player updates and packets
+        synchronized (server.futureTaskQueue)
         {
-            if (player_active_timeout < PLAYER_GRACE)
+            while (!server.futureTaskQueue.isEmpty())
             {
-                process_entities = false;
+                Util.runTask(server.futureTaskQueue.poll(), LOGGER);
             }
         }
-        else if (is_superHot)
-        {
-            if (player_active_timeout <= 0)
-            {
-                process_entities = false;
 
+        for (WorldServer world : server.worlds)
+        {
+            // Time sync
+            if (frozenTickCounter % 20 == 0)
+            {
+                server.getPlayerList().sendPacketToAllPlayersInDimension(new SPacketTimeUpdate(
+                                world.getTotalWorldTime(),
+                                world.getWorldTime(),
+                                false),
+                        world.provider.getDimensionType().getId());
             }
+
+            //TODO: part of playerchunkmap tick to send loaded chunks to clients
+            // Send movement of other players to other clients
+            world.getEntityTracker().tick();
+            // Player movement and stuff
+            world.tickPlayers();
         }
 
+        // Update server status response
+        if (time - server.nanoTimeSinceStatusRefresh >= 5000000000L)
+        {
+            server.nanoTimeSinceStatusRefresh = time;
+            server.getServerStatusResponse().setPlayers(new ServerStatusResponse.Players(server.getMaxPlayers(), server.getCurrentPlayerCount()));
+            GameProfile[] gameProfiles = new GameProfile[Math.min(server.getCurrentPlayerCount(), 12)];
+            int startIndex = MathHelper.getInt(new Random(), 0, server.getCurrentPlayerCount() - gameProfiles.length);
 
+            for (int i = 0; i < gameProfiles.length; i++)
+            {
+                gameProfiles[i] = server.getPlayerList().getPlayers().get(startIndex + i).getGameProfile();
+            }
+
+            Collections.shuffle(Arrays.asList(gameProfiles));
+            server.getServerStatusResponse().getPlayers().setPlayers(gameProfiles);
+        }
+
+        server.getNetworkSystem().networkTick();
+        server.getPlayerList().onTick();
+    }
+
+    public static void add_ticks_to_run_in_pause(int advance)
+    {
+        ticks_to_run_in_pause += advance;
     }
 }

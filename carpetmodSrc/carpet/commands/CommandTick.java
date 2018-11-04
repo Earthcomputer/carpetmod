@@ -82,8 +82,8 @@ public class CommandTick extends CommandCarpetBase
         }
         else if ("freeze".equalsIgnoreCase(args[0]))
         {
-            TickSpeed.is_paused = !TickSpeed.is_paused;
-            if (TickSpeed.is_paused)
+            TickSpeed.is_paused_setting = !TickSpeed.is_paused_setting;
+            if (TickSpeed.is_paused_setting)
             {
                 notifyCommandListener(sender, this, "Game is paused");
             }
@@ -101,30 +101,6 @@ public class CommandTick extends CommandCarpetBase
                 advance = parseInt(args[1], 1, 72000);
             }
             TickSpeed.add_ticks_to_run_in_pause(advance);
-            return;
-        }
-        else if ("superHot".equalsIgnoreCase(args[0]))
-        {
-            if (args.length > 1)
-            {
-                if ("stop".equalsIgnoreCase(args[1]) && !TickSpeed.is_superHot)
-                {
-                    return;
-                }
-                if ("start".equalsIgnoreCase(args[1]) && TickSpeed.is_superHot)
-                {
-                    return;
-                }
-            }
-            TickSpeed.is_superHot = !TickSpeed.is_superHot;
-            if (TickSpeed.is_superHot)
-            {
-                notifyCommandListener(sender, this, "Superhot enabled");
-            }
-            else
-            {
-                notifyCommandListener(sender, this, "Superhot disabled");
-            }
             return;
         }
         else if ("health".equalsIgnoreCase(args[0]))
@@ -158,11 +134,7 @@ public class CommandTick extends CommandCarpetBase
         }
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "rate","warp", "freeze", "step", "superHot", "health", "entities");
-        }
-        if (args.length == 2 && "superHot".equalsIgnoreCase(args[0]))
-        {
-            return getListOfStringsMatchingLastWord(args, "stop","start");
+            return getListOfStringsMatchingLastWord(args, "rate","warp", "freeze", "step", "health", "entities");
         }
         if (args.length == 2 && "rate".equalsIgnoreCase(args[0]))
         {
