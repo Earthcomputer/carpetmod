@@ -14,7 +14,7 @@
      protected final BlockStateContainer field_176227_L;
      private IBlockState field_176228_M;
 -    private String field_149770_b;
-+    public String field_149770_b;
++    public String field_149770_b; // [CM] Changed access from private to public.
  
      public static int func_149682_b(Block p_149682_0_)
      {
