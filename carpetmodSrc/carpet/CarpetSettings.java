@@ -178,6 +178,7 @@ public class CarpetSettings
     public static boolean commandAstral = true;
     public static boolean randomTickOptimization = false;
     public static boolean artificialPermaloader = false;
+    public static int pistonClippingFix = 0;
 
     public static long setSeed = 0;
 
@@ -374,6 +375,8 @@ public class CarpetSettings
   rule("randomTickOptimization","fix", "Stops blocks which don't need to be random ticked from being random ticked")
                                 .extraInfo("Fixed in 1.13"),
   rule("artificialPermaloader", "creative", "The game acts as if there is a permaloader running"),
+  rule("pistonClippingFix",     "fix", "Fixes players clipping through moving piston blocks partially.")
+                                .choices("0", "0 20 40 100"),
 
         };
         for (CarpetSettingEntry rule: RuleList)
