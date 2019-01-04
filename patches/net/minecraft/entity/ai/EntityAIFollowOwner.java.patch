@@ -5,7 +5,7 @@
  public class EntityAIFollowOwner extends EntityAIBase
  {
 -    private final EntityTameable field_75338_d;
-+    protected final EntityTameable field_75338_d;
++    protected final EntityTameable field_75338_d; // [CM] Changed access from private to protected.
      private EntityLivingBase field_75339_e;
      World field_75342_a;
      private final double field_75336_f;
