@@ -63,15 +63,6 @@
          CriteriaTriggers.field_193135_v.func_193182_a(this);
  
          if (this.field_193107_ct != null)
-@@ -465,7 +493,7 @@
-         for (ScoreObjective scoreobjective : this.func_96123_co().func_96520_a(p_184849_1_))
-         {
-             Score score = this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective);
--            score.func_96647_c(p_184849_2_);
-+            score.setScorePoints(p_184849_2_);
-         }
-     }
- 
 @@ -605,6 +633,7 @@
  
              if (!flag && this.field_147101_bU > 0 && p_70097_1_ != DamageSource.field_76380_i)
@@ -105,12 +96,9 @@
  
              if (spacketupdatetileentity != null)
              {
-@@ -1033,8 +1066,12 @@
- 
-             for (ScoreObjective scoreobjective : this.func_96123_co().func_96520_a(p_71064_1_.func_150952_k()))
+@@ -1035,6 +1068,10 @@
              {
--                this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective).func_96649_a(p_71064_2_);
-+                this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective).increaseScore(p_71064_2_);
+                 this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective).func_96649_a(p_71064_2_);
              }
 +
 +            // CM
@@ -119,15 +107,6 @@
          }
      }
  
-@@ -1046,7 +1083,7 @@
- 
-             for (ScoreObjective scoreobjective : this.func_96123_co().func_96520_a(p_175145_1_.func_150952_k()))
-             {
--                this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective).func_96647_c(0);
-+                this.func_96123_co().func_96529_a(this.func_70005_c_(), scoreobjective).setScorePoints(0);
-             }
-         }
-     }
 @@ -1169,7 +1206,7 @@
  
      protected void func_70688_c(PotionEffect p_70688_1_)
