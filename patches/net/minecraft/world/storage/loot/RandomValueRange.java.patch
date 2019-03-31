@@ -1,0 +1,14 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/RandomValueRange.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/RandomValueRange.java
+@@ -50,9 +50,9 @@
+         return MathHelper.func_151240_a(p_186507_1_, this.field_186514_a, this.field_186515_b);
+     }
+ 
+-    public boolean func_186510_a(int p_186510_1_)
++    public boolean isInRange(long value)
+     {
+-        return (float)p_186510_1_ <= this.field_186515_b && (float)p_186510_1_ >= this.field_186514_a;
++        return (float)value <= this.field_186515_b && (float)value >= this.field_186514_a;
+     }
+ 
+     public static class Serializer implements JsonDeserializer<RandomValueRange>, JsonSerializer<RandomValueRange>

@@ -8,7 +8,7 @@
 +import carpet.CarpetSettings;
 +import carpet.helpers.TileEntityOptimizer.ILazyTileEntity;
 +
-+public class TileEntityEnderChest extends TileEntity implements ITickable, ILazyTileEntity
++public class TileEntityEnderChest extends TileEntity implements ILazyTileEntity
  {
      public float field_145972_a;
      public float field_145975_i;

@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandResultStats.java
++++ ../src-work/minecraft/net/minecraft/command/CommandResultStats.java
+@@ -101,7 +101,7 @@
+                     if (scoreboard.func_178819_b(s1, scoreobjective))
+                     {
+                         Score score = scoreboard.func_96529_a(s1, scoreobjective);
+-                        score.func_96647_c(p_184932_4_);
++                        score.setScorePoints(p_184932_4_);
+                     }
+                 }
+             }

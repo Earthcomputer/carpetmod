@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/command/CommandTrigger.java
++++ ../src-work/minecraft/net/minecraft/command/CommandTrigger.java
+@@ -79,7 +79,7 @@
+                     {
+                         if ("set".equals(p_184881_3_[1]))
+                         {
+-                            score.func_96647_c(i);
++                            score.setScorePoints(i);
+                         }
+                         else
+                         {
+@@ -88,7 +88,7 @@
+                                 throw new CommandException("commands.trigger.invalidMode", new Object[] {p_184881_3_[1]});
+                             }
+ 
+-                            score.func_96649_a(i);
++                            score.increaseScore(i);
+                         }
+ 
+                         score.func_178815_a(true);

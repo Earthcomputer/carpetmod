@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/world/storage/loot/conditions/EntityHasScore.java
++++ ../src-work/minecraft/net/minecraft/world/storage/loot/conditions/EntityHasScore.java
+@@ -64,7 +64,7 @@
+         else
+         {
+             String s = p_186631_1_ instanceof EntityPlayerMP ? p_186631_1_.func_70005_c_() : p_186631_1_.func_189512_bd();
+-            return !p_186631_2_.func_178819_b(s, scoreobjective) ? false : p_186631_4_.func_186510_a(p_186631_2_.func_96529_a(s, scoreobjective).func_96652_c());
++            return !p_186631_2_.func_178819_b(s, scoreobjective) ? false : p_186631_4_.isInRange(p_186631_2_.func_96529_a(s, scoreobjective).getScorePoints());
+         }
+     }
+ 

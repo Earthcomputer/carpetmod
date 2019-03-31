@@ -1,0 +1,11 @@
+--- ../src-base/minecraft/net/minecraft/util/text/TextComponentScore.java
++++ ../src-work/minecraft/net/minecraft/util/text/TextComponentScore.java
+@@ -51,7 +51,7 @@
+             if (scoreboard.func_178819_b(this.field_179999_b, scoreobjective))
+             {
+                 Score score = scoreboard.func_96529_a(this.field_179999_b, scoreobjective);
+-                this.func_179997_b(String.format("%d", score.func_96652_c()));
++                this.func_179997_b(String.format("%d", score.getScorePoints()));
+             }
+             else
+             {
