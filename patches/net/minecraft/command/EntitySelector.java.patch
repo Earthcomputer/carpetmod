@@ -1,6 +1,14 @@
 --- ../src-base/minecraft/net/minecraft/command/EntitySelector.java
 +++ ../src-work/minecraft/net/minecraft/command/EntitySelector.java
-@@ -387,7 +387,7 @@
+@@ -38,6 +38,7 @@
+ import net.minecraft.world.GameType;
+ import net.minecraft.world.World;
+ 
++// Hackfix for inner classes: change all line numbers!
+ public class EntitySelector
+ {
+     private static final Pattern field_82389_a = Pattern.compile("^@([pares])(?:\\[([^ ]*)\\])?$");
+@@ -387,7 +388,7 @@
  
      private static List<Predicate<Entity>> func_184952_c(final ICommandSender p_184952_0_, Map<String, String> p_184952_1_)
      {
@@ -9,7 +17,7 @@
          return (map.isEmpty() ? Collections.emptyList() : Lists.newArrayList(new Predicate<Entity>()
          {
              public boolean apply(@Nullable Entity p_apply_1_)
-@@ -400,7 +400,7 @@
+@@ -400,7 +401,7 @@
                  {
                      Scoreboard scoreboard = p_184952_0_.func_184102_h().func_71218_a(0).func_96441_U();
  
@@ -18,7 +26,7 @@
                      {
                          String s = entry.getKey();
                          boolean flag = false;
-@@ -426,14 +426,14 @@
+@@ -426,14 +427,14 @@
                          }
  
                          Score score = scoreboard.func_96529_a(s1, scoreobjective);
@@ -36,7 +44,7 @@
                          {
                              return false;
                          }
-@@ -769,15 +769,15 @@
+@@ -769,15 +770,15 @@
          return p_179651_0_.get(p_179651_1_);
      }
  
