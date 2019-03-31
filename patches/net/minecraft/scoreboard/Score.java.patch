@@ -1,0 +1,86 @@
+--- ../src-base/minecraft/net/minecraft/scoreboard/Score.java
++++ ../src-work/minecraft/net/minecraft/scoreboard/Score.java
+@@ -8,20 +8,20 @@
+     {
+         public int compare(Score p_compare_1_, Score p_compare_2_)
+         {
+-            if (p_compare_1_.func_96652_c() > p_compare_2_.func_96652_c())
++            if (p_compare_1_.getScorePoints() > p_compare_2_.getScorePoints())
+             {
+                 return 1;
+             }
+             else
+             {
+-                return p_compare_1_.func_96652_c() < p_compare_2_.func_96652_c() ? -1 : p_compare_2_.func_96653_e().compareToIgnoreCase(p_compare_1_.func_96653_e());
++                return p_compare_1_.getScorePoints() < p_compare_2_.getScorePoints() ? -1 : p_compare_2_.func_96653_e().compareToIgnoreCase(p_compare_1_.func_96653_e());
+             }
+         }
+     };
+     private final Scoreboard field_96656_b;
+     private final ScoreObjective field_96657_c;
+     private final String field_96654_d;
+-    private int field_96655_e;
++    private long field_96655_e;
+     private boolean field_178817_f;
+     private boolean field_178818_g;
+ 
+@@ -33,7 +33,7 @@
+         this.field_178818_g = true;
+     }
+ 
+-    public void func_96649_a(int p_96649_1_)
++    public void increaseScore(long amount)
+     {
+         if (this.field_96657_c.func_96680_c().func_96637_b())
+         {
+@@ -41,11 +41,11 @@
+         }
+         else
+         {
+-            this.func_96647_c(this.func_96652_c() + p_96649_1_);
++            this.setScorePoints(this.getScorePoints() + amount);
+         }
+     }
+ 
+-    public void func_96646_b(int p_96646_1_)
++    public void decreaseScore(long amount)
+     {
+         if (this.field_96657_c.func_96680_c().func_96637_b())
+         {
+@@ -53,7 +53,7 @@
+         }
+         else
+         {
+-            this.func_96647_c(this.func_96652_c() - p_96646_1_);
++            this.setScorePoints(this.getScorePoints() - amount);
+         }
+     }
+ 
+@@ -65,21 +65,21 @@
+         }
+         else
+         {
+-            this.func_96649_a(1);
++            this.increaseScore(1);
+         }
+     }
+ 
+-    public int func_96652_c()
++    public long getScorePoints()
+     {
+         return this.field_96655_e;
+     }
+ 
+-    public void func_96647_c(int p_96647_1_)
++    public void setScorePoints(long points)
+     {
+-        int i = this.field_96655_e;
+-        this.field_96655_e = p_96647_1_;
++        long i = this.field_96655_e;
++        this.field_96655_e = points;
+ 
+-        if (i != p_96647_1_ || this.field_178818_g)
++        if (i != points || this.field_178818_g)
+         {
+             this.field_178818_g = false;
+             this.func_96650_f().func_96536_a(this);

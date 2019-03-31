@@ -35,3 +35,126 @@
              }
  
              func_152373_a(p_184908_1_, this, "commands.scoreboard.objectives.add.success", new Object[] {s});
+@@ -901,7 +902,7 @@
+ 
+             for (Score score : map.values())
+             {
+-                p_184920_1_.func_145747_a(new TextComponentTranslation("commands.scoreboard.players.list.player.entry", new Object[] {score.func_96652_c(), score.func_96645_d().func_96678_d(), score.func_96645_d().func_96679_b()}));
++                p_184920_1_.func_145747_a(new TextComponentTranslation("commands.scoreboard.players.list.player.entry", new Object[] {score.getScorePoints(), score.func_96645_d().func_96678_d(), score.func_96645_d().func_96679_b()}));
+             }
+         }
+         else
+@@ -934,7 +935,7 @@
+         else
+         {
+             ScoreObjective scoreobjective = this.func_184903_a(p_184918_2_[p_184918_3_++], true, p_184918_4_);
+-            int j = "set".equalsIgnoreCase(s) ? func_175755_a(p_184918_2_[p_184918_3_++]) : func_180528_a(p_184918_2_[p_184918_3_++], 0);
++            long j = "set".equalsIgnoreCase(s) ? func_175766_b(p_184918_2_[p_184918_3_++]) : func_175760_a(p_184918_2_[p_184918_3_++], 0, Long.MAX_VALUE);
+ 
+             if (p_184918_2_.length > p_184918_3_)
+             {
+@@ -961,18 +962,18 @@
+ 
+             if ("set".equalsIgnoreCase(s))
+             {
+-                score.func_96647_c(j);
++                score.setScorePoints(j);
+             }
+             else if ("add".equalsIgnoreCase(s))
+             {
+-                score.func_96649_a(j);
++                score.increaseScore(j);
+             }
+             else
+             {
+-                score.func_96646_b(j);
++                score.decreaseScore(j);
+             }
+ 
+-            func_152373_a(p_184918_1_, this, "commands.scoreboard.players.set.success", new Object[] {scoreobjective.func_96679_b(), s1, score.func_96652_c()});
++            func_152373_a(p_184918_1_, this, "commands.scoreboard.players.set.success", new Object[] {scoreobjective.func_96679_b(), s1, score.getScorePoints()});
+         }
+     }
+ 
+@@ -1044,13 +1045,13 @@
+                 int j = p_184907_3_ < p_184907_2_.length && !p_184907_2_[p_184907_3_].equals("*") ? func_180528_a(p_184907_2_[p_184907_3_], i) : Integer.MAX_VALUE;
+                 Score score = scoreboard.func_96529_a(s, scoreobjective);
+ 
+-                if (score.func_96652_c() >= i && score.func_96652_c() <= j)
++                if (score.getScorePoints() >= i && score.getScorePoints() <= j)
+                 {
+-                    func_152373_a(p_184907_1_, this, "commands.scoreboard.players.test.success", new Object[] {score.func_96652_c(), i, j});
++                    func_152373_a(p_184907_1_, this, "commands.scoreboard.players.test.success", new Object[] {score.getScorePoints(), i, j});
+                 }
+                 else
+                 {
+-                    throw new CommandException("commands.scoreboard.players.test.failed", new Object[] {score.func_96652_c(), i, j});
++                    throw new CommandException("commands.scoreboard.players.test.failed", new Object[] {score.getScorePoints(), i, j});
+                 }
+             }
+         }
+@@ -1087,41 +1088,41 @@
+ 
+                 if ("+=".equals(s1))
+                 {
+-                    score.func_96647_c(score.func_96652_c() + score1.func_96652_c());
++                    score.setScorePoints(score.getScorePoints() + score1.getScorePoints());
+                 }
+                 else if ("-=".equals(s1))
+                 {
+-                    score.func_96647_c(score.func_96652_c() - score1.func_96652_c());
++                    score.setScorePoints(score.getScorePoints() - score1.getScorePoints());
+                 }
+                 else if ("*=".equals(s1))
+                 {
+-                    score.func_96647_c(score.func_96652_c() * score1.func_96652_c());
++                    score.setScorePoints(score.getScorePoints() * score1.getScorePoints());
+                 }
+                 else if ("/=".equals(s1))
+                 {
+-                    if (score1.func_96652_c() != 0)
++                    if (score1.getScorePoints() != 0)
+                     {
+-                        score.func_96647_c(score.func_96652_c() / score1.func_96652_c());
++                        score.setScorePoints(score.getScorePoints() / score1.getScorePoints());
+                     }
+                 }
+                 else if ("%=".equals(s1))
+                 {
+-                    if (score1.func_96652_c() != 0)
++                    if (score1.getScorePoints() != 0)
+                     {
+-                        score.func_96647_c(score.func_96652_c() % score1.func_96652_c());
++                        score.setScorePoints(score.getScorePoints() % score1.getScorePoints());
+                     }
+                 }
+                 else if ("=".equals(s1))
+                 {
+-                    score.func_96647_c(score1.func_96652_c());
++                    score.setScorePoints(score1.getScorePoints());
+                 }
+                 else if ("<".equals(s1))
+                 {
+-                    score.func_96647_c(Math.min(score.func_96652_c(), score1.func_96652_c()));
++                    score.setScorePoints(Math.min(score.getScorePoints(), score1.getScorePoints()));
+                 }
+                 else if (">".equals(s1))
+                 {
+-                    score.func_96647_c(Math.max(score.func_96652_c(), score1.func_96652_c()));
++                    score.setScorePoints(Math.max(score.getScorePoints(), score1.getScorePoints()));
+                 }
+                 else
+                 {
+@@ -1130,9 +1131,9 @@
+                         throw new CommandException("commands.scoreboard.players.operation.invalidOperation", new Object[] {s1});
+                     }
+ 
+-                    int i = score.func_96652_c();
+-                    score.func_96647_c(score1.func_96652_c());
+-                    score1.func_96647_c(i);
++                    long i = score.getScorePoints();
++                    score.setScorePoints(score1.getScorePoints());
++                    score1.setScorePoints(i);
+                 }
+ 
+                 func_152373_a(p_184906_1_, this, "commands.scoreboard.players.operation.success", new Object[0]);

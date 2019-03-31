@@ -1,0 +1,20 @@
+--- ../src-base/minecraft/net/minecraft/scoreboard/ScoreboardSaveData.java
++++ ../src-work/minecraft/net/minecraft/scoreboard/ScoreboardSaveData.java
+@@ -189,7 +189,7 @@
+             }
+ 
+             Score score = this.field_96507_a.func_96529_a(s, scoreobjective);
+-            score.func_96647_c(nbttagcompound.func_74762_e("Score"));
++            score.setScorePoints(nbttagcompound.func_74763_f("Score"));
+ 
+             if (nbttagcompound.func_74764_b("Locked"))
+             {
+@@ -304,7 +304,7 @@
+                 NBTTagCompound nbttagcompound = new NBTTagCompound();
+                 nbttagcompound.func_74778_a("Name", score.func_96653_e());
+                 nbttagcompound.func_74778_a("Objective", score.func_96645_d().func_96679_b());
+-                nbttagcompound.func_74768_a("Score", score.func_96652_c());
++                nbttagcompound.func_74772_a("Score", score.getScorePoints());
+                 nbttagcompound.func_74757_a("Locked", score.func_178816_g());
+                 nbttaglist.func_74742_a(nbttagcompound);
+             }

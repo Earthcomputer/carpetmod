@@ -1,0 +1,57 @@
+--- ../src-base/minecraft/net/minecraft/command/EntitySelector.java
++++ ../src-work/minecraft/net/minecraft/command/EntitySelector.java
+@@ -387,7 +387,7 @@
+ 
+     private static List<Predicate<Entity>> func_184952_c(final ICommandSender p_184952_0_, Map<String, String> p_184952_1_)
+     {
+-        final Map<String, Integer> map = func_96560_a(p_184952_1_);
++        final Map<String, Long> map = func_96560_a(p_184952_1_);
+         return (map.isEmpty() ? Collections.emptyList() : Lists.newArrayList(new Predicate<Entity>()
+         {
+             public boolean apply(@Nullable Entity p_apply_1_)
+@@ -400,7 +400,7 @@
+                 {
+                     Scoreboard scoreboard = p_184952_0_.func_184102_h().func_71218_a(0).func_96441_U();
+ 
+-                    for (Entry<String, Integer> entry : map.entrySet())
++                    for (Entry<String, Long> entry : map.entrySet())
+                     {
+                         String s = entry.getKey();
+                         boolean flag = false;
+@@ -426,14 +426,14 @@
+                         }
+ 
+                         Score score = scoreboard.func_96529_a(s1, scoreobjective);
+-                        int i = score.func_96652_c();
++                        long i = score.getScorePoints();
+ 
+-                        if (i < ((Integer)entry.getValue()).intValue() && flag)
++                        if (i < ((Long)entry.getValue()).longValue() && flag)
+                         {
+                             return false;
+                         }
+ 
+-                        if (i > ((Integer)entry.getValue()).intValue() && !flag)
++                        if (i > ((Long)entry.getValue()).longValue() && !flag)
+                         {
+                             return false;
+                         }
+@@ -769,15 +769,15 @@
+         return p_179651_0_.get(p_179651_1_);
+     }
+ 
+-    public static Map<String, Integer> func_96560_a(Map<String, String> p_96560_0_)
++    public static Map<String, Long> func_96560_a(Map<String, String> p_96560_0_)
+     {
+-        Map<String, Integer> map = Maps.<String, Integer>newHashMap();
++        Map<String, Long> map = Maps.<String, Long>newHashMap();
+ 
+         for (String s : p_96560_0_.keySet())
+         {
+             if (s.startsWith("score_") && s.length() > "score_".length())
+             {
+-                map.put(s.substring("score_".length()), Integer.valueOf(MathHelper.func_82715_a(p_96560_0_.get(s), 1)));
++                map.put(s.substring("score_".length()), Long.valueOf(MathHelper.getLong(p_96560_0_.get(s), 1)));
+             }
+         }
+ 
