@@ -22,6 +22,11 @@ public class CommandReverseRNG extends CommandBase {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         final long a = 0x97be9f880aa9L;
         final long b = 0xeac471130bcaL;
