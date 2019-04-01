@@ -1,14 +1,15 @@
 package carpet.commands;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.EntitySelector;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
+
+import java.lang.reflect.Field;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class CommandReverseRNG extends CommandBase {
     @Override
@@ -28,6 +29,36 @@ public class CommandReverseRNG extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length != 0 && "verify".equalsIgnoreCase(args[0])) {
+            Scoreboard scoreboard = server.worlds[0].getScoreboard();
+            ScoreObjective messConstants = scoreboard.getObjective("messConstants");
+            if (messConstants == null)
+                throw new CommandException("messConstants doesn't exist");
+
+            long currentSeed = scoreboard.getOrCreateScore("seed", messConstants).getScorePoints();
+            long actualSeed;
+            try {
+                Class<?> clazz = Class.forName("java.lang.Math$RandomNumberGeneratorHolder");
+                Field field = clazz.getDeclaredField("randomNumberGenerator");
+                field.setAccessible(true);
+                Random rand = (Random) field.get(null);
+                field = Random.class.getDeclaredField("seed");
+                field.setAccessible(true);
+                actualSeed = ((AtomicLong) field.get(rand)).get();
+            } catch (ReflectiveOperationException e) {
+                throw new AssertionError(e);
+            }
+
+            if (currentSeed == actualSeed) {
+                notifyCommandListener(sender, this, "Seeds match");
+                sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, 1);
+            } else {
+                notifyCommandListener(sender, this, "Seeds don't match (actual = " + actualSeed + ")");
+                sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, 0);
+            }
+            return;
+        }
+
         final long a = 0x97be9f880aa9L;
         final long b = 0xeac471130bcaL;
         long[] bvec = {0xc8fbaf16b114L, 0xc2a36898b9feL, 0x13e60619c078L, 0xe7244157cb02L, 0x3771906241cL, 0x47d6c669fa46L, 0L};
