@@ -6,8 +6,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,7 +23,7 @@ public class CommandReverseRNG extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/reverserng";
+        return "/reverserng [verify|setseed] [newSeed]";
     }
 
     @Override
@@ -38,13 +42,9 @@ public class CommandReverseRNG extends CommandBase {
             long currentSeed = scoreboard.getOrCreateScore("seed", messConstants).getScorePoints();
             long actualSeed;
             try {
-                Class<?> clazz = Class.forName("java.lang.Math$RandomNumberGeneratorHolder");
-                Field field = clazz.getDeclaredField("randomNumberGenerator");
+                Field field = Random.class.getDeclaredField("seed");
                 field.setAccessible(true);
-                Random rand = (Random) field.get(null);
-                field = Random.class.getDeclaredField("seed");
-                field.setAccessible(true);
-                actualSeed = ((AtomicLong) field.get(rand)).get();
+                actualSeed = ((AtomicLong) field.get(getMathRandom())).get();
             } catch (ReflectiveOperationException e) {
                 throw new AssertionError(e);
             }
@@ -59,9 +59,17 @@ public class CommandReverseRNG extends CommandBase {
             return;
         }
 
+        if (args.length != 0 && "setseed".equalsIgnoreCase(args[0])) {
+            if (args.length == 1)
+                throw new WrongUsageException("/reverserng setseed <newSeed>");
+            long newSeed = parseLong(args[1]);
+            getMathRandom().setSeed(newSeed ^ 0x5deece66dL);
+            return;
+        }
+
         final long a = 0x97be9f880aa9L;
         final long b = 0xeac471130bcaL;
-        long[] bvec = {0xc8fbaf16b114L, 0xc2a36898b9feL, 0x13e60619c078L, 0xe7244157cb02L, 0x3771906241cL, 0x47d6c669fa46L, 0L};
+        long[] bvec = {-100614,-30878,23964,55694,-72536,-43523,-120166};
         final long[] m6 = {0xff7392795dd6L, 0x1184f9b300L, 0xff79d1d659aeL, 0xff62f08153d5L, 0xfe64fe5e8622L, 0x24beb7ecc11L, 0x30c38f7adcL};
         final long[][] mm1 = {
                 {-26, -81, -16, 50, 14, 22, -76},
@@ -101,19 +109,17 @@ public class CommandReverseRNG extends CommandBase {
             long[] v = new long[7];
             for (int k = 0; k < 7; k++) {
                 if ((mm1[k][j] & 0x800000000000L) != 0) { // if it's negative mod 2^48
-                    v[k] = lutPrev[k] & -(1L << ( 22 ));
-
+                    v[k] = lutPrev[k];
                 } else {
-                    v[k] = lut[k]+(1L << ( 39 ));
-                    // whatever meh it's just an april fools video
-                    //if (detectorId == 0) {
-                    //    v[k]+=(1L<<48);
-                    //}
+                    v[k] = lut[k];
+                    if (lutPrev[k] > lut[k]) { // if detector 0
+                        v[k] += 1L << (48-38);
+                    }
                 }
             }
             long val = dotBig(v, mm1, j);
             val -= bvec[j];
-            val >>= 48;
+            val >>= 48-38;
             penultimateVector[j] = val;
 
         }
@@ -126,6 +132,26 @@ public class CommandReverseRNG extends CommandBase {
         scoreboard.getOrCreateScore("seed", messConstants).setScorePoints(seed);
 
         notifyCommandListener(sender, this, "Reversed the seed");
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, "verify", "setseed");
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private static Random getMathRandom() {
+        try {
+            Class<?> clazz = Class.forName("java.lang.Math$RandomNumberGeneratorHolder");
+            Field field = clazz.getDeclaredField("randomNumberGenerator");
+            field.setAccessible(true);
+            return (Random) field.get(null);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     private static long toBigInt48(long n) {
