@@ -90,7 +90,6 @@ public class CommandReverseRNG extends CommandBase {
                 {-21, -6, 91, -19, 56, 51, -12},
                 {-44, 25, -6, -1, -44, 65, 34}
         };
-        bvec = matmult(bvec, mm1);
 
         long[] lut = new long[7];
         long[] lutPrev = new long[7];
