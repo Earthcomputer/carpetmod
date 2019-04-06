@@ -7,6 +7,7 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -16,6 +17,9 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class CommandReverseRNG extends CommandBase {
+
+    public static int hitCount = 0;
+
     @Override
     public String getName() {
         return "reverserng";
@@ -64,6 +68,12 @@ public class CommandReverseRNG extends CommandBase {
                 throw new WrongUsageException("/reverserng setseed <newSeed>");
             long newSeed = parseLong(args[1]);
             getMathRandom().setSeed(newSeed ^ 0x5deece66dL);
+            notifyCommandListener(sender, this, "Set the Math.random() seed to " + newSeed);
+            return;
+        }
+
+        if (args.length != 0 && "hitcount".equalsIgnoreCase(args[0])) {
+            sender.sendMessage(new TextComponentString("Hit Count: " + hitCount));
             return;
         }
 
