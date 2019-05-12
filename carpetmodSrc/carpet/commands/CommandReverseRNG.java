@@ -138,7 +138,7 @@ public class CommandReverseRNG extends CommandBase {
         ScoreObjective messConstants = scoreboard.getObjective("messConstants");
         if (messConstants == null)
             throw new CommandException("messConstants doesn't exist");
-        scoreboard.getOrCreateScore("seed", messConstants).setScorePoints(seed);
+        scoreboard.getOrCreateScore("seed", messConstants).setScorePoints((int)seed);
 
         notifyCommandListener(sender, this, "Reversed the seed");
     }
