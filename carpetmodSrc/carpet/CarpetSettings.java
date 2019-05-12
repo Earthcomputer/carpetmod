@@ -20,13 +20,16 @@ import java.util.stream.Collectors;
 import carpet.carpetclient.CarpetClientChunkLogger;
 import carpet.carpetclient.CarpetClientRuleChanger;
 import carpet.helpers.RandomTickOptimization;
+import carpet.patches.BlockWool;
 import carpet.utils.TickingArea;
 import carpet.worldedit.WorldEditBridge;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +42,7 @@ public class CarpetSettings
     public static boolean locked = false;
 
     // TODO: replace these constants at build time
-    public static final String carpetVersion = "v19_03_30";
+    public static final String carpetVersion = "v19_05_02";
     public static final String minecraftVersion = "1.12";
     public static final String mcpMappings = "20180713-1.12";
 
@@ -144,11 +147,16 @@ public class CarpetSettings
     })
     public static boolean accurateBlockPlacement = false;
 
-    @Rule(desc = "Repeater pointing from and to wool blocks transfer signals wirelessly", category = CREATIVE, extra = {
+    @Rule(desc = "Repeater pointing from and to wool blocks transfer signals wirelessly", category = CREATIVE, validator = "validateWirelessRedstone", extra = {
             "Temporary feature - repeaters need an update when reloaded",
             "By Narcoleptic Frog"
     })
     public static boolean wirelessRedstone = false;
+    private static boolean validateWirelessRedstone(boolean value) {
+        if (!value)
+            ((BlockWool) Blocks.WOOL).clearWirelessLocations();
+        return true;
+    }
 
     @Rule(desc = "Repeater delays depends on stained hardened clay aka terracotta on which they are placed", category = {EXPERIMENTAL, CREATIVE}, extra = {
             "1 to 15 gt per delay added (1-15 block data), 0 (white) adds 100gt per tick"
@@ -184,6 +192,7 @@ public class CarpetSettings
             "Required clients with RSMM Mod by Narcoleptic Frog. Enables multiplayer experience with RSMM Mod"
     })
     public static boolean redstoneMultimeter = false;
+
     private static boolean validateRedstoneMultimeter(boolean value) {
         CarpetServer.rsmmChannel.setEnabled(value);
         return true;
@@ -542,6 +551,28 @@ public class CarpetSettings
     @Rule(desc = "Fixes updates suppression causing server crashes.", category = FIX)
     public static boolean updateSuppressionCrashFix;
 
+    @Rule(desc = "Fixes double tile tick scheduling", category = FIX, validator = "validateDoubleTileTickSchedulingFix")
+    public static boolean doubleTileTickSchedulingFix = false;
+    private static boolean validateDoubleTileTickSchedulingFix(boolean value) {
+        if (CarpetServer.minecraft_server.worlds == null)
+            return true;
+        @SuppressWarnings("unchecked")
+        ArrayList<NextTickListEntry>[] tileTicks = new ArrayList[3];
+        for (int dim = 0; dim < 3; dim++) {
+            WorldServer world = CarpetServer.minecraft_server.worlds[dim];
+            tileTicks[dim] = new ArrayList<>(world.pendingTickListEntriesHashSet);
+            world.pendingTickListEntriesHashSet.clear();
+            world.pendingTickListEntriesTreeSet.clear();
+        }
+        doubleTileTickSchedulingFix = value; // set this early
+        for (int dim = 0; dim < 3; dim++) {
+            WorldServer world = CarpetServer.minecraft_server.worlds[dim];
+            world.pendingTickListEntriesHashSet.addAll(tileTicks[dim]);
+            world.pendingTickListEntriesTreeSet.addAll(tileTicks[dim]);
+        }
+        return true;
+    }
+
     // ===== SURVIVAL FEATURES ===== //
 
     @Rule(desc = "Dropping entire stacks works also from on the crafting UI result slot", category = {FIX, SURVIVAL})
@@ -602,6 +633,9 @@ public class CarpetSettings
             "They need a crafting table to craft tier 2 and higher recipes"
     })
     public static boolean nitwitCrafter = false;
+
+    @Rule(desc = "Villagers automaticaly trade from items on the ground", category = EXPERIMENTAL)
+    public static boolean villagerAutoTrader;
 
     @Rule(desc = "Silverfish drop a gravel item when breaking out of a block", category = EXPERIMENTAL)
     public static boolean silverFishDropGravel = false;
@@ -969,7 +1003,7 @@ public class CarpetSettings
                     if (actualFilter == null) return true;
                     if (rule.contains(actualFilter)) return true;
                     for (RuleCategory ctgy : getCategories(rule))
-                        if (ctgy.name().equalsIgnoreCase(rule))
+                        if (ctgy.name().equalsIgnoreCase(actualFilter))
                             return true;
                     return false;
                 })
