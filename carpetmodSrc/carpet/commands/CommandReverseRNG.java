@@ -57,7 +57,7 @@ public class CommandReverseRNG extends CommandBase {
                 notifyCommandListener(sender, this, "Seeds match");
                 sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, 1);
             } else {
-                notifyCommandListener(sender, this, "Seeds don't match (actual = " + actualSeed + ")");
+                notifyCommandListener(sender, this, "Seeds don't match (actual = " + Long.toHexString(actualSeed) + ")");
                 sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, 0);
             }
             return;
@@ -66,9 +66,14 @@ public class CommandReverseRNG extends CommandBase {
         if (args.length != 0 && "setseed".equalsIgnoreCase(args[0])) {
             if (args.length == 1)
                 throw new WrongUsageException("/reverserng setseed <newSeed>");
-            long newSeed = parseLong(args[1]);
+            long newSeed;
+            try {
+                newSeed = Long.parseLong(args[1], 16);
+            } catch (NumberFormatException e) {
+                throw new CommandException("Invalid long: " + args[1]);
+            }
             getMathRandom().setSeed(newSeed ^ 0x5deece66dL);
-            notifyCommandListener(sender, this, "Set the Math.random() seed to " + newSeed);
+            notifyCommandListener(sender, this, "Set the Math.random() seed to " + Long.toHexString(newSeed));
             return;
         }
 
