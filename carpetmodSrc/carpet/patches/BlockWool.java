@@ -35,6 +35,22 @@ public class BlockWool extends BlockColored {
         return CarpetSettings.wirelessRedstone;
     }
 
+    public int getWoolPower(MinecraftServer server, EnumDyeColor color) {
+        int power = 0;
+        for (Pair<Integer, BlockPos> location : getAllWoolOfType(server, color)) {
+            World world = server.getWorld(location.getLeft());
+            CarpetClientChunkLogger.setReason("Carpet wireless redstone");
+            for (EnumFacing facing : EnumFacing.values()) {
+                BlockPos testPos = location.getRight().offset(facing);
+                IBlockState state = world.getBlockState(testPos);
+                if (state.getBlock() != this || state.getValue(COLOR) != color)
+                    power = Math.max(power, world.getRedstonePower(testPos, facing));
+            }
+            CarpetClientChunkLogger.resetReason();
+        }
+        return power;
+    }
+
     private List<Pair<Integer, BlockPos>> getAllWoolOfType(MinecraftServer server, EnumDyeColor type) {
         List<Pair<Integer, BlockPos>> woolList = new ArrayList<>();
 
@@ -79,19 +95,7 @@ public class BlockWool extends BlockColored {
         // Adds this location if absent
         woolBlocks.get(state.getValue(COLOR)).add(Pair.of(worldIn.provider.getDimensionType().getId(), pos));
 
-        int power = 0;
-        for (Pair<Integer, BlockPos> location : getAllWoolOfType(worldIn.getMinecraftServer(), state.getValue(COLOR))) {
-            World world = worldIn.getMinecraftServer().getWorld(location.getLeft());
-            CarpetClientChunkLogger.setReason("Carpet wireless redstone");
-            for (EnumFacing facing : EnumFacing.values()) {
-                BlockPos testPos = location.getRight().offset(facing);
-                if (world.getBlockState(testPos) != state)
-                    power = Math.max(power, world.getRedstonePower(testPos, facing));
-            }
-            CarpetClientChunkLogger.resetReason();
-        }
-
-        return power;
+        return getWoolPower(worldIn.getMinecraftServer(), state.getValue(COLOR));
     }
 
     @Override

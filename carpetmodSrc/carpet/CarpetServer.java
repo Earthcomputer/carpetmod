@@ -1,5 +1,6 @@
 package carpet;
 
+import carpet.helpers.MessHelper;
 import carpet.helpers.StackTraceDeobfuscator;
 import carpet.network.PluginChannelManager;
 import carpet.network.ToggleableChannelHandler;
@@ -108,6 +109,7 @@ public class CarpetServer // static for now - easier to handle all around the co
 
     public static void tick(MinecraftServer server)
     {
+        MessHelper.tick(server);
         TickSpeed.tick(server);
         if (CarpetSettings.redstoneMultimeter)
         {

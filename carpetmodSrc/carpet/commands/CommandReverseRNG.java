@@ -44,14 +44,7 @@ public class CommandReverseRNG extends CommandBase {
                 throw new CommandException("messConstants doesn't exist");
 
             long currentSeed = scoreboard.getOrCreateScore("seed", messConstants).getScorePoints();
-            long actualSeed;
-            try {
-                Field field = Random.class.getDeclaredField("seed");
-                field.setAccessible(true);
-                actualSeed = ((AtomicLong) field.get(getMathRandom())).get();
-            } catch (ReflectiveOperationException e) {
-                throw new AssertionError(e);
-            }
+            long actualSeed = getMathRandomSeed();
 
             if (currentSeed == actualSeed) {
                 notifyCommandListener(sender, this, "Seeds match");
@@ -157,7 +150,17 @@ public class CommandReverseRNG extends CommandBase {
         }
     }
 
-    private static Random getMathRandom() {
+    public static long getMathRandomSeed() {
+        try {
+            Field field = Random.class.getDeclaredField("seed");
+            field.setAccessible(true);
+            return ((AtomicLong) field.get(getMathRandom())).get();
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public static Random getMathRandom() {
         try {
             Class<?> clazz = Class.forName("java.lang.Math$RandomNumberGeneratorHolder");
             Field field = clazz.getDeclaredField("randomNumberGenerator");
