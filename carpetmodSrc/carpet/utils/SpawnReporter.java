@@ -44,6 +44,8 @@ public class SpawnReporter
     public static final HashMap<String, Long> spawn_ticks_succ = new HashMap<String, Long>();
     public static final HashMap<String, Long> spawn_ticks_spawns = new HashMap<String, Long>();
     public static final HashMap<String, Long> spawn_cap_count = new HashMap<String, Long>();
+    public static long[] lifetime = new long[3];
+    public static long[] lifetimeCount = new long[3];
     public static class SpawnPos
     {
         public String mob;
@@ -296,6 +298,10 @@ public class SpawnReporter
         mobcaps.put(0,new HashMap<>());
         mobcaps.put(1,new HashMap<>());
         track_spawns = 0L;
+        for(int i = 0; i < 3; i++) {
+            lifetimeCount[i] = 0;
+            lifetime[i] = 0;
+        }
     }
     
     public static List<ITextComponent> tracking_report(World worldIn)
@@ -348,6 +354,10 @@ public class SpawnReporter
                             (72000 * spawn_stats.get(type_code).get(creature_name)/duration ))));
                 }
             }
+        }
+        for(int i = 0; i < 3; i++) {
+            if(lifetimeCount[i] > 0)
+                report.add(Messenger.s(null, String.format("Lifetime avrage: %.2f",(float)lifetime[i]/(float)lifetimeCount[i])));
         }
         return report;
     }
