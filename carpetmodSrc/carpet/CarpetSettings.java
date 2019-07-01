@@ -152,6 +152,7 @@ public class CarpetSettings
             "By Narcoleptic Frog"
     })
     public static boolean wirelessRedstone = false;
+
     private static boolean validateWirelessRedstone(boolean value) {
         if (!value)
             ((BlockWool) Blocks.WOOL).clearWirelessLocations();
@@ -572,6 +573,9 @@ public class CarpetSettings
         }
         return true;
     }
+
+    @Rule(desc = "Fixes player position truncation causing chunks to load with one block offset to chunk boarders in negative coordinates.", category = FIX)
+    public static boolean playerChunkLoadingFix = false;
 
     // ===== SURVIVAL FEATURES ===== //
 
