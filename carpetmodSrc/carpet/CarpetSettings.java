@@ -740,6 +740,9 @@ public class CarpetSettings
     @Rule(desc = "Sends invisible duplicate UUID entities to clients", category = FIX)
     public static boolean sendDuplicateEntitiesToClients = false;
 
+    @Rule(desc = "Kills dead duplicate entities", category = FIX)
+    public static boolean killDeadDuplicateEntities = false;
+
     // ===== FEATURES ===== //
 
     @Rule(desc = "Chorus fruit can be shot with an arrow to have it pop as an item as in the future minecraft versions.", category = FEATURE)
