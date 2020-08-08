@@ -46,7 +46,7 @@
 +        this.func_71560_a(new CommandLagSpike());
 +        this.func_71560_a(new CommandDuplicateEntity());
 +        this.func_71560_a(new OrderCommand());
-
+ 
 +        this.func_71560_a(new CommandPlayer());
 +        this.func_71560_a(new CommandAutosave());
 +        this.func_71560_a(new CommandWaypoint());
