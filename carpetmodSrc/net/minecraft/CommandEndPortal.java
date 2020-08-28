@@ -19,7 +19,7 @@ public class CommandEndPortal extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/end_portal <reset|chunks>";
+        return "/end_portal <reset|chunks|hash_size|stage>";
     }
 
     @Override
@@ -36,13 +36,20 @@ public class CommandEndPortal extends CommandBase {
                 int numChunks = ((WorldServer) sender.getEntityWorld()).getChunkProvider().loadedChunks.size();
                 notifyCommandListener(sender, this, "Number of loaded chunks: " + numChunks);
                 break;
+            case "hash_size":
+                int hashSize = ((WorldServer) sender.getEntityWorld()).getChunkProvider().loadedChunks.n;
+                notifyCommandListener(sender, this, "Hash size " + hashSize);
+                break;
+            case "stage":
+                notifyCommandListener(sender, this, "Current stage: " + EndPortalFrameItem.stage);
+                break;
         }
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "reset", "chunks");
+            return getListOfStringsMatchingLastWord(args, "reset", "chunks", "hash_size", "stage");
         }
         return Collections.emptyList();
     }
