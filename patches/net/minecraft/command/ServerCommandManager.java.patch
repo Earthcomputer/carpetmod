@@ -1,6 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/command/ServerCommandManager.java
 +++ ../src-work/minecraft/net/minecraft/command/ServerCommandManager.java
-@@ -33,6 +33,10 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.command;
+ 
++import net.minecraft.CommandEndPortal;
+ import net.minecraft.command.server.CommandBanIp;
+ import net.minecraft.command.server.CommandBanPlayer;
+ import net.minecraft.command.server.CommandBroadcast;
+@@ -33,6 +34,10 @@
  import net.minecraft.util.text.TextComponentTranslation;
  import net.minecraft.util.text.TextFormatting;
  
@@ -11,7 +18,7 @@
  public class ServerCommandManager extends CommandHandler implements ICommandListener
  {
      private final MinecraftServer field_184880_a;
-@@ -89,7 +93,48 @@
+@@ -89,7 +94,49 @@
          this.func_71560_a(new CommandLocate());
          this.func_71560_a(new CommandReload());
          this.func_71560_a(new CommandFunction());
@@ -46,6 +53,7 @@
 +        this.func_71560_a(new CommandLagSpike());
 +        this.func_71560_a(new CommandDuplicateEntity());
 +        this.func_71560_a(new OrderCommand());
++        this.func_71560_a(new CommandEndPortal());
  
 +        this.func_71560_a(new CommandPlayer());
 +        this.func_71560_a(new CommandAutosave());

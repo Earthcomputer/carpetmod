@@ -1,0 +1,31 @@
+--- ../src-base/minecraft/net/minecraft/block/BlockBeacon.java
++++ ../src-work/minecraft/net/minecraft/block/BlockBeacon.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.block;
+ 
++import net.minecraft.EndPortalFrameItem;
+ import net.minecraft.block.material.MapColor;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.block.state.IBlockState;
+@@ -97,6 +98,9 @@
+ 
+     public static void func_176450_d(final World p_176450_0_, final BlockPos p_176450_1_)
+     {
++        if (EndPortalFrameItem.stage == 0) {
++            EndPortalFrameItem.stage = 1;
++        }
+         HttpUtil.field_180193_a.submit(new Runnable()
+         {
+             public void run()
+@@ -105,6 +109,11 @@
+ 
+                 for (int i = p_176450_1_.func_177956_o() - 1; i >= 0; --i)
+                 {
++                    while (EndPortalFrameItem.stage == 1 || EndPortalFrameItem.stage == 2) {
++                        try {
++                            Thread.sleep(1);
++                        } catch (InterruptedException ignore) {}
++                    }
+                     final BlockPos blockpos = new BlockPos(p_176450_1_.func_177958_n(), i, p_176450_1_.func_177952_p());
+ 
+                     if (!chunk.func_177444_d(blockpos))
