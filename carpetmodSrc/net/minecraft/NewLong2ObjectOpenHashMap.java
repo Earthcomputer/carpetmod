@@ -1012,6 +1012,7 @@ public class NewLong2ObjectOpenHashMap<V> extends AbstractLong2ObjectMap<V> impl
         this.mask = mask;
         if (EndPortalFrameItem.stage == 2) {
             EndPortalFrameItem.stage = 3;
+            EndPortalFrameItem.t3 = System.nanoTime();
         }
         maxFill = HashCommon.maxFill(n, f);
         while (EndPortalFrameItem.stage == 3) {

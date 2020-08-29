@@ -17,12 +17,13 @@
  
      public BlockFalling()
      {
-@@ -44,15 +47,25 @@
+@@ -44,15 +47,26 @@
  
      private void func_176503_e(World p_176503_1_, BlockPos p_176503_2_)
      {
 +        if (EndPortalFrameItem.stage == 4) {
 +            EndPortalFrameItem.stage = 5;
++            EndPortalFrameItem.t5 = System.nanoTime();
 +        }
          if (func_185759_i(p_176503_1_.func_180495_p(p_176503_2_.func_177977_b())) && p_176503_2_.func_177956_o() >= 0)
          {

@@ -7,17 +7,18 @@
  import net.minecraft.block.material.MapColor;
  import net.minecraft.block.material.Material;
  import net.minecraft.block.state.IBlockState;
-@@ -97,6 +98,9 @@
+@@ -97,6 +98,10 @@
  
      public static void func_176450_d(final World p_176450_0_, final BlockPos p_176450_1_)
      {
 +        if (EndPortalFrameItem.stage == 0) {
 +            EndPortalFrameItem.stage = 1;
++            EndPortalFrameItem.t1 = System.nanoTime();
 +        }
          HttpUtil.field_180193_a.submit(new Runnable()
          {
              public void run()
-@@ -105,6 +109,11 @@
+@@ -105,6 +110,11 @@
  
                  for (int i = p_176450_1_.func_177956_o() - 1; i >= 0; --i)
                  {
