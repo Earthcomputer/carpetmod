@@ -44,18 +44,23 @@ public class CarpetSettings
     public static boolean locked = false;
 
     // TODO: replace these constants at build time
-    public static final String carpetVersion = "v20_08_04";
+    public static final String carpetVersion = "v20_09_08";
     public static final String minecraftVersion = "1.12.2";
     public static final String mcpMappings = "39-1.12";
 
     public static final Logger LOG = LogManager.getLogger();
 
     public static long setSeed = 0; // Xcom: if you dunno where to put it, shove it in CarpetSettings - Earth :)
+    public static long endChunkSeed = 0;
+
 
     // ===== COMMANDS ===== //
     /*
      * Rules in this category should start with the "command" prefix
      */
+
+    @Rule(desc = "Enables /repopulate command to repopulate given chunk", category = COMMANDS)
+    public static boolean commandRepopulate;
 
     @Rule(desc = "Enables /grow command for growing plants", category = COMMANDS)
     public static boolean commandGrow = true;
@@ -141,6 +146,9 @@ public class CarpetSettings
     public static boolean publicKick;
 
     // ===== CREATIVE TOOLS ===== //
+
+    @Rule(desc = "Emerald ore receiving a block update will throw a StackOverflowError, simulating an update suppressor.", category = CREATIVE)
+    public static boolean oreUpdateSuppressor = false;
 
     @Rule(desc = "Makes update carpet public for all users.", category = CREATIVE)
     public static boolean updateCarpetAll;
@@ -241,7 +249,9 @@ public class CarpetSettings
     @SurvivalDefault
     public static boolean flippinCactus = false;
 
-    @Rule(desc = "hoppers pointing to wool will count items passing through them", category = {COMMANDS, CREATIVE, SURVIVAL}, extra = {
+    @Rule(desc = "Count items passing through hoppers", category = {COMMANDS, CREATIVE, SURVIVAL}, extra = {
+            "wool: Hoppers pointing to wool will count items passing through them",
+            "all: All items in hoppers will be counted",
             "Enables /counter command, and actions while placing red and green carpets on wool blocks",
             "Use /counter <color?> reset to reset the counter, and /counter <color?> to query",
             "In survival, place green carpet on same color wool to query, red to reset the counters",
@@ -250,7 +260,11 @@ public class CarpetSettings
     })
     @CreativeDefault
     @SurvivalDefault
-    public static boolean hopperCounters = false;
+    public static HopperCounters hopperCounters = HopperCounters.off;
+    public static enum HopperCounters
+    {
+        off, wool, all
+    }
 
     @Rule(desc = "Items thrown into a cactus will count items that are destroyed in them.", category = {COMMANDS, CREATIVE, SURVIVAL}, extra = {
     })
