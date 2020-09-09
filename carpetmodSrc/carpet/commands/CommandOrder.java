@@ -11,7 +11,7 @@ import net.minecraft.world.chunk.Chunk;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderCommand extends CommandBase {
+public class CommandOrder extends CommandBase {
     @Override
     public String getName() {
         return "order";

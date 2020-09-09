@@ -14,6 +14,7 @@ public class CarpetCommands {
         handler.registerCommand(new CommandDebugCarpet());
         handler.registerCommand(new CommandDebuglogger());
         handler.registerCommand(new CommandDistance());
+        handler.registerCommand(new CommandDuplicateEntity());
         handler.registerCommand(new CommandEntityInfo());
         handler.registerCommand(new CommandFillBiome());
         handler.registerCommand(new CommandGMC());
@@ -22,6 +23,7 @@ public class CarpetCommands {
         handler.registerCommand(new CommandLagSpike());
         handler.registerCommand(new CommandLight());
         handler.registerCommand(new CommandLog());
+        handler.registerCommand(new CommandOrder());
         handler.registerCommand(new CommandPerimeter());
         handler.registerCommand(new CommandPing());
         handler.registerCommand(new CommandPlayer());
