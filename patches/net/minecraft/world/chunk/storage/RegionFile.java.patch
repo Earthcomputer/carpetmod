@@ -1,0 +1,23 @@
+--- ../src-base/minecraft/net/minecraft/world/chunk/storage/RegionFile.java
++++ ../src-work/minecraft/net/minecraft/world/chunk/storage/RegionFile.java
+@@ -16,9 +16,12 @@
+ import java.util.zip.InflaterInputStream;
+ import javax.annotation.Nullable;
+ import net.minecraft.server.MinecraftServer;
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
+ 
+ public class RegionFile
+ {
++    private static final Logger LOGGER = LogManager.getLogger();
+     private static final byte[] field_76720_a = new byte[4096];
+     private final File field_76718_b;
+     private RandomAccessFile field_76719_c;
+@@ -183,6 +186,7 @@
+ 
+             if (l >= 256)
+             {
++                LOGGER.warn("Savestating chunk at " + p_76706_1_ + ", " + p_76706_2_);
+                 return;
+             }
+ 

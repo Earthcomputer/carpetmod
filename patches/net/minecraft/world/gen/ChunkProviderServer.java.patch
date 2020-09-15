@@ -133,7 +133,7 @@
                  Iterator<Long> iterator = this.field_73248_b.iterator();
  
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
-@@ -231,16 +277,48 @@
+@@ -231,16 +277,47 @@
                      Long olong = iterator.next();
                      Chunk chunk = (Chunk)this.field_73244_f.get(olong);
  
@@ -157,7 +157,6 @@
 +                                    || field_73251_h.func_175661_b(Entity.class, player -> player.field_70176_ah == chunk.field_76635_g && player.field_70164_aj == chunk.field_76647_h).isEmpty()) {
 +                                // Getting the chunk size is incredibly inefficient, but it's better than unloading and reloading the chunk
 +                                if (UnloadOrder.isLargeEnoughToSavestate(UnloadOrder.getSavedChunkSize(chunk))) {
-+                                    field_147417_b.warn("Savestating chunk at " + chunk.field_76635_g + ", " + chunk.field_76647_h);
 +                                    chunk.func_76623_d();
 +                                    //this.saveChunkData(chunk); no point saving the chunk data, we know that won't work
 +                                    this.func_73243_a(chunk);
@@ -183,7 +182,7 @@
  
              this.field_73247_e.func_75817_a();
          }
-@@ -283,9 +361,17 @@
+@@ -283,9 +360,17 @@
      {
          return this.field_73244_f.containsKey(ChunkPos.func_77272_a(p_73149_1_, p_73149_2_));
      }
