@@ -17,7 +17,7 @@
      protected static final IBlockState field_185964_a = Blocks.field_150377_bs.func_176223_P();
      protected static final IBlockState field_185965_b = Blocks.field_150350_a.func_176223_P();
      private final NoiseGeneratorOctaves field_185969_i;
-@@ -173,7 +180,14 @@
+@@ -173,10 +180,17 @@
  
      public Chunk func_185932_a(int p_185932_1_, int p_185932_2_)
      {
@@ -32,7 +32,11 @@
 +        this.randomSeedUsed = false;
          ChunkPrimer chunkprimer = new ChunkPrimer();
          this.field_73231_z = this.field_73230_p.func_72959_q().func_76933_b(this.field_73231_z, p_185932_1_ * 16, p_185932_2_ * 16, 16, 16);
-         this.func_180518_a(p_185932_1_, p_185932_2_, chunkprimer);
+-        this.func_180518_a(p_185932_1_, p_185932_2_, chunkprimer);
++        //this.setBlocksInChunk(x, z, chunkprimer);
+         this.func_185962_a(chunkprimer);
+ 
+         if (this.field_73229_q)
 @@ -327,7 +341,9 @@
      {
          BlockFalling.field_149832_M = true;
