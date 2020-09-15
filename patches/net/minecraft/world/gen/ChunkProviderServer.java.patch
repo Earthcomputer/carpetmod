@@ -156,7 +156,7 @@
 +                            if (CarpetSettings.whereToChunkSavestate == CarpetSettings.WhereToChunkSavestate.everywhere
 +                                    || field_73251_h.func_175661_b(Entity.class, player -> player.field_70176_ah == chunk.field_76635_g && player.field_70164_aj == chunk.field_76647_h).isEmpty()) {
 +                                // Getting the chunk size is incredibly inefficient, but it's better than unloading and reloading the chunk
-+                                if ((UnloadOrder.getSavedChunkSize(chunk) + 5) / 4096 + 1 >= 256) {
++                                if (UnloadOrder.isLargeEnoughToSavestate(UnloadOrder.getSavedChunkSize(chunk))) {
 +                                    field_147417_b.warn("Savestating chunk at " + chunk.field_76635_g + ", " + chunk.field_76647_h);
 +                                    chunk.func_76623_d();
 +                                    //this.saveChunkData(chunk); no point saving the chunk data, we know that won't work

@@ -602,6 +602,11 @@ public class UnloadOrder
         chunkTag.setTag("Level", levelTag);
         chunkTag.setInteger("DataVersion", 1343);
         AnvilChunkLoader.writeChunkToNBT(chunk, chunk.getWorld(), levelTag);
+        return getSavedChunkSize(chunkTag);
+    }
+
+    public static int getSavedChunkSize(NBTTagCompound chunkTag)
+    {
         CountingOutputStream counter = new CountingOutputStream(NullOutputStream.NULL_OUTPUT_STREAM);
         try {
             DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(counter)));
@@ -611,5 +616,10 @@ public class UnloadOrder
         }
         catch (IOException ignore) {}
         return counter.getCount();
+    }
+
+    public static boolean isLargeEnoughToSavestate(int size)
+    {
+        return (size + 5) / 4096 + 1 >= 256;
     }
 }
