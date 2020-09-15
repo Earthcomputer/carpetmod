@@ -460,7 +460,8 @@
 +                    }
                      if (!(p_184165_1_ instanceof EntityPlayer))
                      {
-                         field_147491_a.warn("Keeping entity {} that already exists with UUID {}", EntityList.func_191301_a(entity), uuid.toString());
+-                        field_147491_a.warn("Keeping entity {} that already exists with UUID {}", EntityList.func_191301_a(entity), uuid.toString());
++                        //LOGGER.warn("Keeping entity {} that already exists with UUID {}", EntityList.getKey(entity), uuid.toString());
 +                        if (CarpetSettings.sendDuplicateEntitiesToClients && !duplicateEntities.contains(p_184165_1_)) {
 +                            field_73062_L.func_72786_a(p_184165_1_); // vanilla handles the un-tracking properly
 +                            duplicateEntities.add(p_184165_1_);

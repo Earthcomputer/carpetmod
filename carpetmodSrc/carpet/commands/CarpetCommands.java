@@ -10,6 +10,7 @@ public class CarpetCommands {
         handler.registerCommand(new CommandAutosave());
         handler.registerCommand(new CommandBlockInfo());
         handler.registerCommand(new CommandCarpet());
+        handler.registerCommand(new CommandChunkSize());
         handler.registerCommand(new CommandCounter());
         handler.registerCommand(new CommandDebugCarpet());
         handler.registerCommand(new CommandDebuglogger());
