@@ -442,7 +442,7 @@
                  {
 +                    if (!this.field_73063_M.func_152621_a(chunk.field_76635_g, chunk.field_76647_h))
                      chunkproviderserver.func_189549_a(chunk);
-+                    else if (CarpetSettings.whereToChunkSavestate.canUnloadNearPlayers)
++                    else if (CarpetSettings.whereToChunkSavestate.canUnloadNearPlayers && field_73011_w.func_186058_p() == DimensionType.THE_END)
 +                    {
 +                        chunkproviderserver.func_189549_a(chunk);
 +                        chunk.field_189550_d = false;
