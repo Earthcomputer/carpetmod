@@ -47,6 +47,7 @@ public class LoggerRegistry
     public static boolean __items;
     public static boolean __rng;
     public static boolean __ramChunkLoading;
+    public static boolean __virusCompare;
     public static boolean __recipes;
     public static boolean __damageDebug;
     public static boolean __invisDebug;
@@ -66,6 +67,7 @@ public class LoggerRegistry
         registerLogger("items",new Logger(server, "items", "brief", new String[]{"brief", "full"}, LogHandler.CHAT));
         registerLogger("rng", new Logger(server, "rng", null, null, LogHandler.CHAT));
         registerLogger("ramChunkLoading", new Logger(server, "ramChunkLoading", null, null, LogHandler.CHAT));
+        registerLogger("virusCompare", new Logger(server, "virusCompare", null, null, LogHandler.CHAT));
 
         registerLogger("tps", new Logger(server, "tps", null, null, LogHandler.HUD));
         registerLogger("packets", new Logger(server, "packets", null, null, LogHandler.HUD));
