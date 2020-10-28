@@ -29,6 +29,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -451,6 +452,34 @@ public class CarpetSettings
 
     @Rule(desc = "Where chunk savestating is allowed to happen", category = CREATIVE)
     public static WhereToChunkSavestate whereToChunkSavestate = WhereToChunkSavestate.unload;
+
+    public static enum WhereToChunkSavestateDimensional {
+        inherit(null), unload(WhereToChunkSavestate.unload), everywhere_except_players(WhereToChunkSavestate.everywhere_except_players), everywhere(WhereToChunkSavestate.everywhere);
+        public final WhereToChunkSavestate delegate;
+        WhereToChunkSavestateDimensional(WhereToChunkSavestate delegate) {
+            this.delegate = delegate;
+        }
+    }
+
+    @Rule(desc = "Overworld-specific whereToChunkSavestate rule", category = CREATIVE)
+    public static WhereToChunkSavestateDimensional whereToChunkSavestateOverworld = WhereToChunkSavestateDimensional.inherit;
+
+    @Rule(desc = "Nether-specific whereToChunkSavestate rule", category = CREATIVE)
+    public static WhereToChunkSavestateDimensional whereToChunkSavestateNether = WhereToChunkSavestateDimensional.inherit;
+
+    @Rule(desc = "End-specific whereToChunkSavestate rule", category = CREATIVE)
+    public static WhereToChunkSavestateDimensional whereToChunkSavestateTheEnd = WhereToChunkSavestateDimensional.inherit;
+
+    public static WhereToChunkSavestate getWhereToChunkSavestate(DimensionType dimension) {
+        WhereToChunkSavestateDimensional dimensional;
+        switch (dimension) {
+            case OVERWORLD: dimensional = whereToChunkSavestateOverworld; break;
+            case NETHER: dimensional = whereToChunkSavestateNether; break;
+            case THE_END: dimensional = whereToChunkSavestateTheEnd; break;
+            default: throw new AssertionError("Who added a dimension? :notvanilla:");
+        }
+        return dimensional == WhereToChunkSavestateDimensional.inherit ? whereToChunkSavestate : dimensional.delegate;
+    }
 
     @Rule(desc = "When true, the game acts as if a permaloader is running", category = CREATIVE)
     public static boolean simulatePermaloader = false;

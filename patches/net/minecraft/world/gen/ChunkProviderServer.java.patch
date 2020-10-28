@@ -177,9 +177,9 @@
 +                        if(CarpetClientChunkLogger.logger.enabled) {
 +                            CarpetClientChunkLogger.logger.log(this.field_73251_h,chunk.field_76635_g,chunk.field_76647_h,CarpetClientChunkLogger.Event.UNLOADING);
 +                        }
-+                        } else if (CarpetSettings.whereToChunkSavestate.canUnloadNearPlayers && field_73251_h.field_73011_w.func_186058_p() == DimensionType.THE_END) {
++                        } else if (CarpetSettings.getWhereToChunkSavestate(field_73251_h.field_73011_w.func_186058_p()).canUnloadNearPlayers) {
 +                            //noinspection ConstantConditions
-+                            if (CarpetSettings.whereToChunkSavestate == CarpetSettings.WhereToChunkSavestate.everywhere
++                            if (CarpetSettings.getWhereToChunkSavestate(field_73251_h.field_73011_w.func_186058_p()) == CarpetSettings.WhereToChunkSavestate.everywhere
 +                                    || field_73251_h.func_175661_b(Entity.class, player -> player.field_70176_ah == chunk.field_76635_g && player.field_70164_aj == chunk.field_76647_h).isEmpty()) {
 +                                // Getting the chunk size is incredibly inefficient, but it's better than unloading and reloading the chunk
 +                                if (UnloadOrder.isLargeEnoughToSavestate(UnloadOrder.getSavedChunkSize(chunk))) {
