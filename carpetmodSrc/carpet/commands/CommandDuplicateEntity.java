@@ -36,7 +36,7 @@ public class CommandDuplicateEntity extends CommandBase {
             throw new WrongUsageException(getUsage(sender));
         }
 
-        Entity entity = EntitySelector.matchOneEntity(sender, args[0], Entity.class);
+        Entity entity = EntitySelector.matchEntities(sender, args[0], Entity.class).stream().filter(e -> e.world == sender.getEntityWorld()).findFirst().orElse(null);
         if (entity == null) {
             throw new CommandException("Entity not found");
         } else if (entity instanceof EntityPlayer) {
