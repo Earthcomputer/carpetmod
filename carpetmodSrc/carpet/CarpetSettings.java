@@ -27,10 +27,8 @@ import carpet.worldedit.WorldEditBridge;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.LogManager;
@@ -443,10 +441,14 @@ public class CarpetSettings
     public static boolean ignoreEntityWhenPlacing = false;
 
     public static enum WhereToChunkSavestate {
-        unload(false), everywhere_except_players(true), everywhere(true);
-        public final boolean canUnloadNearPlayers;
-        WhereToChunkSavestate(boolean canUnloadNearPlayers) {
-            this.canUnloadNearPlayers = canUnloadNearPlayers;
+        unload(false),
+        everywhere_except_players(true),
+        everywhere(true),
+        unload_near_players(false),
+        ;
+        public final boolean canSavestateLoadedChunks;
+        WhereToChunkSavestate(boolean canSavestateLoadedChunks) {
+            this.canSavestateLoadedChunks = canSavestateLoadedChunks;
         }
     }
 
@@ -454,7 +456,12 @@ public class CarpetSettings
     public static WhereToChunkSavestate whereToChunkSavestate = WhereToChunkSavestate.unload;
 
     public static enum WhereToChunkSavestateDimensional {
-        inherit(null), unload(WhereToChunkSavestate.unload), everywhere_except_players(WhereToChunkSavestate.everywhere_except_players), everywhere(WhereToChunkSavestate.everywhere);
+        inherit(null),
+        unload(WhereToChunkSavestate.unload),
+        everywhere_except_players(WhereToChunkSavestate.everywhere_except_players),
+        everywhere(WhereToChunkSavestate.everywhere),
+        unload_near_players(WhereToChunkSavestate.unload_near_players),
+        ;
         public final WhereToChunkSavestate delegate;
         WhereToChunkSavestateDimensional(WhereToChunkSavestate delegate) {
             this.delegate = delegate;

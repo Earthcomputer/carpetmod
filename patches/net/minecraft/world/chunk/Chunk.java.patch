@@ -16,7 +16,23 @@
  import java.util.concurrent.ConcurrentLinkedQueue;
  import javax.annotation.Nullable;
  import net.minecraft.block.Block;
-@@ -38,6 +37,11 @@
+@@ -19,6 +18,7 @@
+ import net.minecraft.entity.Entity;
+ import net.minecraft.init.Biomes;
+ import net.minecraft.init.Blocks;
++import net.minecraft.server.management.PlayerChunkMapEntry;
+ import net.minecraft.tileentity.TileEntity;
+ import net.minecraft.util.ClassInheritanceMultiMap;
+ import net.minecraft.util.EnumFacing;
+@@ -29,6 +29,7 @@
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.world.EnumSkyBlock;
+ import net.minecraft.world.World;
++import net.minecraft.world.WorldServer;
+ import net.minecraft.world.WorldType;
+ import net.minecraft.world.biome.Biome;
+ import net.minecraft.world.biome.BiomeProvider;
+@@ -38,6 +39,11 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -28,13 +44,17 @@
  public class Chunk
  {
      private static final Logger field_150817_t = LogManager.getLogger();
-@@ -66,13 +70,17 @@
+@@ -66,13 +72,21 @@
      private final ConcurrentLinkedQueue<BlockPos> field_177447_w;
      public boolean field_189550_d;
  
 +    // Phipro newlight CARPET-PHIPRO
 +    public short[] neighborLightChecks = null;
 +    public short pendingNeighborLightInits;
++
++    // Used to detect the first query to a chunk in each tick
++    public int lastQueriedTick;
++    public boolean doingUnloadSavestateNearPlayer = false;
 +
      public Chunk(World p_i1995_1_, int p_i1995_2_, int p_i1995_3_)
      {
@@ -47,7 +67,7 @@
          this.field_76649_t = 4096;
          this.field_177447_w = Queues.<BlockPos>newConcurrentLinkedQueue();
          this.field_76645_j = (ClassInheritanceMultiMap[])(new ClassInheritanceMultiMap[16]);
-@@ -188,38 +196,43 @@
+@@ -188,38 +202,43 @@
  
                  if (this.field_76637_e.field_73011_w.func_191066_m())
                  {
@@ -116,7 +136,7 @@
                  }
              }
          }
-@@ -307,7 +320,13 @@
+@@ -307,7 +326,13 @@
  
      private void func_76615_h(int p_76615_1_, int p_76615_2_, int p_76615_3_)
      {
@@ -131,7 +151,7 @@
          int j = i;
  
          if (p_76615_2_ > i)
-@@ -322,66 +341,72 @@
+@@ -322,66 +347,72 @@
  
          if (j != i)
          {
@@ -249,7 +269,7 @@
              }
  
              int l1 = this.field_76634_f[p_76615_3_ << 4 | p_76615_1_];
-@@ -399,6 +424,12 @@
+@@ -399,6 +430,12 @@
                  this.field_82912_p = l1;
              }
  
@@ -262,7 +282,7 @@
              if (this.field_76637_e.field_73011_w.func_191066_m())
              {
                  for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-@@ -478,12 +509,19 @@
+@@ -478,12 +515,19 @@
          }
      }
  
@@ -285,7 +305,7 @@
          int l = k << 4 | i;
  
          if (j >= this.field_76638_b[l] - 1)
-@@ -492,15 +530,15 @@
+@@ -492,15 +536,15 @@
          }
  
          int i1 = this.field_76634_f[l];
@@ -304,7 +324,7 @@
              Block block1 = iblockstate.func_177230_c();
              ExtendedBlockStorage extendedblockstorage = this.field_76652_q[j >> 4];
              boolean flag = false;
-@@ -515,19 +553,23 @@
+@@ -515,19 +559,23 @@
                  extendedblockstorage = new ExtendedBlockStorage(j >> 4 << 4, this.field_76637_e.field_73011_w.func_191066_m());
                  this.field_76652_q[j >> 4] = extendedblockstorage;
                  flag = j >= i1;
@@ -332,7 +352,7 @@
                  }
              }
  
-@@ -537,13 +579,13 @@
+@@ -537,13 +585,13 @@
              }
              else
              {
@@ -348,7 +368,7 @@
                      int k1 = iblockstate.func_185891_c();
  
                      if (j1 > 0)
-@@ -558,15 +600,17 @@
+@@ -558,15 +606,17 @@
                          this.func_76615_h(i, j, k);
                      }
  
@@ -371,7 +391,7 @@
  
                      if (tileentity != null)
                      {
-@@ -574,19 +618,30 @@
+@@ -574,19 +624,30 @@
                      }
                  }
  
@@ -407,7 +427,7 @@
                      }
  
                      if (tileentity1 != null)
-@@ -596,6 +651,9 @@
+@@ -596,6 +657,9 @@
                  }
  
                  this.field_76643_l = true;
@@ -417,7 +437,7 @@
                  return iblockstate;
              }
          }
-@@ -603,6 +661,7 @@
+@@ -603,6 +667,7 @@
  
      public int func_177413_a(EnumSkyBlock p_177413_1_, BlockPos p_177413_2_)
      {
@@ -425,7 +445,7 @@
          int i = p_177413_2_.func_177958_n() & 15;
          int j = p_177413_2_.func_177956_o();
          int k = p_177413_2_.func_177952_p() & 15;
-@@ -633,7 +692,12 @@
+@@ -633,7 +698,12 @@
          {
              extendedblockstorage = new ExtendedBlockStorage(j >> 4 << 4, this.field_76637_e.field_73011_w.func_191066_m());
              this.field_76652_q[j >> 4] = extendedblockstorage;
@@ -439,7 +459,7 @@
          }
  
          this.field_76643_l = true;
-@@ -653,6 +717,7 @@
+@@ -653,6 +723,7 @@
  
      public int func_177443_a(BlockPos p_177443_1_, int p_177443_2_)
      {
@@ -447,7 +467,7 @@
          int i = p_177443_1_.func_177958_n() & 15;
          int j = p_177443_1_.func_177956_o();
          int k = p_177443_1_.func_177952_p() & 15;
-@@ -819,6 +884,10 @@
+@@ -819,6 +890,10 @@
          {
              this.field_76637_e.func_175650_b(classinheritancemultimap);
          }
@@ -458,7 +478,7 @@
      }
  
      public void func_76623_d()
-@@ -964,13 +1033,40 @@
+@@ -964,13 +1039,40 @@
          {
              if (p_186034_1_.func_185933_a(this, this.field_76635_g, this.field_76647_h))
              {
@@ -500,8 +520,12 @@
              this.func_76630_e();
          }
      }
-@@ -1018,10 +1114,13 @@
+@@ -1016,12 +1118,17 @@
+             this.func_150803_c(this.field_76637_e.field_72995_K);
+         }
  
++        boolean firstTick = !this.field_150815_m;
++
          this.field_150815_m = true;
  
 -        if (!this.field_150814_l && this.field_76646_k)
@@ -518,7 +542,22 @@
  
          while (!this.field_177447_w.isEmpty())
          {
-@@ -1041,6 +1140,11 @@
+@@ -1034,6 +1141,14 @@
+                 this.field_76637_e.func_175704_b(blockpos, blockpos);
+             }
+         }
++
++        if (firstTick)
++        {
++            PlayerChunkMapEntry pcmEntry = ((WorldServer) field_76637_e).field_73063_M.func_187301_b(field_76635_g, field_76647_h);
++            if (pcmEntry != null) {
++                pcmEntry.func_187272_b();
++            }
++        }
+     }
+ 
+     public boolean func_150802_k()
+@@ -1041,6 +1156,11 @@
          return this.field_150815_m && this.field_76646_k && this.field_150814_l;
      }
  
@@ -530,7 +569,7 @@
      public boolean func_186035_j()
      {
          return this.field_150815_m;
-@@ -1389,4 +1493,67 @@
+@@ -1389,4 +1509,67 @@
          QUEUED,
          CHECK;
      }

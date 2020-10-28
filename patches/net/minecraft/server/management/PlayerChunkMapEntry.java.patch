@@ -1,6 +1,6 @@
 --- ../src-base/minecraft/net/minecraft/server/management/PlayerChunkMapEntry.java
 +++ ../src-work/minecraft/net/minecraft/server/management/PlayerChunkMapEntry.java
-@@ -19,25 +19,33 @@
+@@ -19,25 +19,39 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -36,12 +36,18 @@
 +        if(carpet.carpetclient.CarpetClientChunkLogger.logger.enabled)
 +            carpet.carpetclient.CarpetClientChunkLogger.setReason("Player loading chunk");
 +        // Added a way to remove spectators loading chunks. CARPET-XCOM
++        boolean wasPlayerCausedChunkLoad = mapIn.func_72688_a().func_72863_F().isPlayerCausedChunkLoad;
++        mapIn.func_72688_a().func_72863_F().isPlayerCausedChunkLoad = true;
++        try {
 +        if(!CarpetSettings.spectatorsDontLoadChunks || !player.func_175149_v()) this.field_187286_f = mapIn.func_72688_a().func_72863_F().func_186028_c(chunkX, chunkZ);
++        } finally {
++            mapIn.func_72688_a().func_72863_F().isPlayerCausedChunkLoad = wasPlayerCausedChunkLoad;
++        }
 +        carpet.carpetclient.CarpetClientChunkLogger.resetReason();
      }
  
      public ChunkPos func_187264_a()
-@@ -53,6 +61,14 @@
+@@ -53,6 +67,14 @@
          }
          else
          {
@@ -56,7 +62,7 @@
              if (this.field_187283_c.isEmpty())
              {
                  this.field_187289_i = this.field_187282_b.func_72688_a().func_82737_E();
-@@ -65,13 +81,17 @@
+@@ -65,13 +87,17 @@
                  this.func_187278_c(p_187276_1_);
              }
          }
@@ -75,7 +81,7 @@
              {
                  p_187277_1_.field_71135_a.func_147359_a(new SPacketUnloadChunk(this.field_187284_d.field_77276_a, this.field_187284_d.field_77275_b));
              }
-@@ -80,9 +100,20 @@
+@@ -80,9 +106,20 @@
  
              if (this.field_187283_c.isEmpty())
              {
@@ -96,8 +102,13 @@
      }
  
      public boolean func_187268_a(boolean p_187268_1_)
-@@ -95,7 +126,10 @@
+@@ -93,14 +130,23 @@
+         }
+         else
          {
++            boolean wasPlayerCausedChunkLoad = this.field_187282_b.func_72688_a().func_72863_F().isPlayerCausedChunkLoad;
++            this.field_187282_b.func_72688_a().func_72863_F().isPlayerCausedChunkLoad = true;
++            try {
              if (p_187268_1_)
              {
 +                if(carpet.carpetclient.CarpetClientChunkLogger.logger.enabled)
@@ -107,7 +118,15 @@
              }
              else
              {
-@@ -248,12 +282,28 @@
+                 this.field_187286_f = this.field_187282_b.func_72688_a().func_72863_F().func_186028_c(this.field_187284_d.field_77276_a, this.field_187284_d.field_77275_b);
+             }
++            } finally {
++                this.field_187282_b.func_72688_a().func_72863_F().isPlayerCausedChunkLoad = wasPlayerCausedChunkLoad;
++            }
+ 
+             return this.field_187286_f != null;
+         }
+@@ -248,12 +294,28 @@
      {
          if (p_187273_1_ != null)
          {
