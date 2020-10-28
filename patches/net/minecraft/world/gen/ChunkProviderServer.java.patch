@@ -84,7 +84,7 @@
          if (chunk != null)
          {
 +        	// ChunkLogger - 0x-CARPET
-+        	if(CarpetClientChunkLogger.logger.enabled && chunk.field_189550_d) {
++        	if(CarpetClientChunkLogger.logger.enabled && chunk.field_189550_d && (!chunk.doingUnloadSavestateNearPlayer || !isPlayerCausedChunkLoad)) {
 +        		CarpetClientChunkLogger.logger.log(this.field_73251_h,p_186026_1_,p_186026_2_,CarpetClientChunkLogger.Event.CANCEL_UNLOAD);
 +        	}
 +        	if (chunk.field_76635_g == 622 && chunk.field_76647_h == 624 && field_73251_h.field_73011_w.func_186058_p() == DimensionType.OVERWORLD && chunk.lastQueriedTick != field_73251_h.func_73046_m().func_71259_af() % 900 && !isPlayerCausedChunkLoad) {
